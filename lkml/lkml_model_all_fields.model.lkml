@@ -127,17 +127,5 @@ explore: view_name {
   cancel_grouping_fields: [fully_scoped_field, fully_scoped_field]
 }
 
-test: test1 {
-  explore_source: view_name
-  assert: assertion {
-    expression:  Expression Block ;;
-  }
-}
 
-test: test2 {
-  explore_source: view_name
-  assert: assertion2 {
-    expression:  Expression Block 2 ;;
-  }
-}
 # Ending comments
