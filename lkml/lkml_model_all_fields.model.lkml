@@ -34,6 +34,20 @@ map_layer: identifier {
   # url: "URL that contains map file"
 }
 
+map_layer: identifier_2 {
+  # extents_json_url: "URL to JSON extents file"
+  feature_key: "Name of TopoJSON object"
+  file: "/lkml/africa_map_layer.topojson"
+  format: topojson
+  label: "Label I want"
+  # max_zoom_level: 10
+  # min_zoom_level: 5
+  projection: cartesian
+  property_key: "TopoJSON property"
+  property_label_key: "Label for TopoJSON property"
+  # url: "URL that contains map file"
+}
+
 datagroup: datagroup_name {
   sql_trigger: SQL query ;;
   max_cache_age: "24 hours"
@@ -96,7 +110,10 @@ explore: view_name {
     type: left_outer
     relationship: one_to_one
     from: view_name
+    outer_only: no
     sql_table_name: table_name ;;
+    sql_foreign_key: foreign_key_name ;;
+    sql_where: where_criteria ;;
     view_label: "desired label name"
     fields: [field_or_set, field_or_set]
     required_joins: [view_name, view_name]
@@ -109,7 +126,10 @@ explore: view_name {
     type: left_outer
     relationship: one_to_one
     from: view_name
+    outer_only: yes
     sql_table_name: table_name ;;
+    sql_foreign_key: foreign_key_name ;;
+    sql_where: where_criteria ;;
     view_label: "desired label name"
     fields: [field_or_set, field_or_set]
     required_joins: [view_name, view_name]

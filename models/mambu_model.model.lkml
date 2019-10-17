@@ -1,13 +1,13 @@
 connection: "snowflake_stitch"
 
-include: "/**/*.view"
+include: "/views_mambu/*.view"
 
-datagroup: hackathon_default_datagroup {
+datagroup: mambu_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: hackathon_default_datagroup
+persist_with: mambu_default_datagroup
 
 
 # EXPLORES
