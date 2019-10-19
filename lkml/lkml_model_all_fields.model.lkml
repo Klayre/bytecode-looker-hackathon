@@ -1,3 +1,6 @@
+# This model contains at least 2 of ALL sub-objects with ALL parameter fields possible
+# Used for building/testing Stitch/Singer data integration and Object Schema JSONs
+
 connection: "snowflake_stitch"
 
 include: "/**/*.view"                      # include all views in this project

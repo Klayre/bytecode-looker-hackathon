@@ -1,3 +1,6 @@
+# This is a minimal model, containing one of each sub-object
+# Used for testing lkml creation of sub-objects as dictionaries or list arrays
+
 connection: "snowflake_stitch"
 
 include: "/**/*.view"

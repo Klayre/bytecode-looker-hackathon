@@ -1,3 +1,6 @@
+# This View contains at least 2 of ALL sub-objects with ALL parameter fields populated
+# Used for building/testing the Stitch/Singer data integration Schema JSONs
+
 view: lkml_view_all_fields {
   sql_table_name: table_name ;;
   suggestions: no
