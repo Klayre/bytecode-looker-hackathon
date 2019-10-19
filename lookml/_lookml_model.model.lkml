@@ -1,6 +1,7 @@
 connection: "snowflake_stitch"
 
 include: "/lookml/*.view"
+include: "/info_schema/*.view"
 
 datagroup: lookml_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -8,7 +9,6 @@ datagroup: lookml_default_datagroup {
 }
 
 persist_with: lookml_default_datagroup
-
 
 explore: model_files {
   group_label: "LookML"
