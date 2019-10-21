@@ -7,7 +7,7 @@ view: models {
     type: string
     primary_key: yes
     hidden: yes
-    sql: ${sha} || '-' || ${path} ;;
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${path} ;;
   }
 
   dimension_group: _sdc_batched {
@@ -114,6 +114,20 @@ view: models {
     sql: ${TABLE}.FISCAL_MONTH_OFFSET::INT ;;
   }
 
+  dimension: git_owner {
+    group_label: "Git"
+    label: "Git Owner"
+    type: string
+    sql: ${TABLE}.GIT_OWNER ;;
+  }
+
+  dimension: git_repository {
+    group_label: "Git"
+    label: "Git Repository"
+    type: string
+    sql: ${TABLE}.GIT_REPOSITORY ;;
+  }
+
   dimension: includes {
     group_label: "Includes"
     label: "Includes"
@@ -166,6 +180,7 @@ view: models {
   }
 
   dimension: path {
+    group_label: "Git"
     label: "Model Path"
     type: string
     sql: ${TABLE}.PATH ;;
@@ -186,6 +201,7 @@ view: models {
   }
 
   dimension: sha {
+    group_label: "Git"
     label: "Model SHA"
     description: "Unique hash key based on file contents"
     type: string

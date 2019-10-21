@@ -7,7 +7,7 @@ view: view_files {
     type: string
     primary_key: yes
     hidden: yes
-    sql: ${sha} || '-' || ${path} ;;
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${path} ;;
   }
 
   dimension_group: _sdc_batched {
@@ -80,6 +80,18 @@ view: view_files {
     sql: ${TABLE}.ENCODING ;;
   }
 
+  dimension: git_owner {
+    label: "Git Owner"
+    type: string
+    sql: ${TABLE}.GIT_OWNER ;;
+  }
+
+  dimension: git_repository {
+    label: "Git Repository"
+    type: string
+    sql: ${TABLE}.GIT_REPOSITORY ;;
+  }
+
   dimension: git_url {
     group_label: "URLs"
     label: "Git URL"
@@ -129,11 +141,6 @@ view: view_files {
     sql: ${TABLE}.NAME ;;
   }
 
-  dimension: owner_name {
-    label: "Owner Name"
-    sql: SPLIT_PART(SPLIT_PART(SPLIT_PART(${url}, '/repos/', 2), '/contents/', 1), '/', 1) ;;
-  }
-
   dimension: path {
     label: "View Path"
     type: string
@@ -142,11 +149,6 @@ view: view_files {
       url: "{{ html_url }}"
     }
     sql: ${TABLE}.PATH ;;
-  }
-
-  dimension: repository_name {
-    label: "Repository Name"
-    sql: SPLIT_PART(SPLIT_PART(SPLIT_PART(${url}, '/repos/', 2), '/contents/', 1), '/', 2) ;;
   }
 
   dimension: sha {

@@ -34,6 +34,7 @@ access_grant: access_grant_name {
 }
 
 explore: model_files {
+  hidden: yes
   join: models {
     relationship: one_to_one
     sql_on: ${model_files.model_file_pk} = ${model_files.model_file_pk} ;;

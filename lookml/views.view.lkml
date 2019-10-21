@@ -6,14 +6,14 @@ view: views {
     label: "View PK"
     type: string
     primary_key: yes
-    sql: ${sha} || '-' || ${path} || '-' || ${name} ;;
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${path} || '-' || ${name} ;;
     hidden: yes
   }
 
   dimension: view_file_key {
     label: "View File Key"
     type: string
-    sql: ${sha} || '-' || ${path} ;;
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${path} ;;
     hidden: yes
   }
 
@@ -401,6 +401,20 @@ view: views {
     hidden: yes
   }
 
+  dimension: git_owner {
+    group_label: "Git"
+    label: "Git Owner"
+    type: string
+    sql: ${TABLE}.GIT_OWNER ;;
+  }
+
+  dimension: git_repository {
+    group_label: "Git"
+    label: "Git Repository"
+    type: string
+    sql: ${TABLE}.GIT_REPOSITORY ;;
+  }
+
   dimension_group: last_modified {
     type: time
     timeframes: [
@@ -436,6 +450,7 @@ view: views {
   }
 
   dimension: path {
+    group_label: "Git"
     label: "View Path"
     type: string
     sql: ${TABLE}.PATH ;;
@@ -458,6 +473,7 @@ view: views {
   }
 
   dimension: sha {
+    group_label: "Git"
     label: "View SHA"
     description: "Unique hash key based on file contents"
     type: string
