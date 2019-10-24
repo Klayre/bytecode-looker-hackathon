@@ -14,7 +14,7 @@ view: models__explores__access_filters {
     label: "Access Filter PK"
     type: string
     primary_key: yes
-    sql: ${models__explores.explores_pk} || '-' || ${field_name} '-' || ${user_attribute} ;;
+    sql: ${models__explores.explores_pk} || '-' || ${field_name} || '-' || ${user_attribute} ;;
     hidden: yes
   }
 
