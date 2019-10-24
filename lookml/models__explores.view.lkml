@@ -74,6 +74,12 @@ view: models__explores {
     sql:array_to_string(parse_json(${always_joins}), ', ') ;;
   }
 
+  dimension: base_view_name {
+    label: "Base View Name"
+    type: string
+    sql: COALESCE(${from}, ${view_name}, ${name}) ;;
+  }
+
   dimension: cancel_grouping_fields {
     group_label: "Cancel Grouping Fields"
     label: "Cancel Grouping Fields JSON"

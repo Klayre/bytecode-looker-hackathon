@@ -23,6 +23,33 @@ view: models__explores__joins {
 #         , lateral flatten(input => ex.value:joins) j
 #          ;;
 
+
+  filter: names_metasearch {
+    type: string
+    suggestable: no
+    case_sensitive: no
+    sql:
+    {% condition %} ${name} {% endcondition %}
+    OR
+    {% condition %} ${from} {% endcondition %}
+    OR
+    {% condition %} ${models__explores.name} {% endcondition %}
+    OR
+    {% condition %} ${models__explores.extends_list} {% endcondition %}
+    OR
+    {% condition %} ${models__explores.from} {% endcondition %}
+    OR
+    {% condition %} ${models__explores.view_name} {% endcondition %}
+    OR
+    {% condition %} ${model_files.name} {% endcondition %}
+    OR
+    {% condition %} ${model_files.git_owner} {% endcondition %}
+    OR
+    {% condition %} ${model_files.git_repository} {% endcondition %}
+
+    ;;
+  }
+
   dimension: joins_pk {
     label: "Joins PK"
     type: string
@@ -56,6 +83,12 @@ view: models__explores__joins {
     label: "From"
     type: string
     sql: j.value:from::varchar ;;
+  }
+
+  dimension: join_view_name {
+    label: "Join View Name"
+    type: string
+    sql: COALESCE(${from}, ${name}) ;;
   }
 
   dimension: name {

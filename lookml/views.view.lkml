@@ -10,6 +10,13 @@ view: views {
     hidden: yes
   }
 
+  dimension: view_key {
+    label: "View Key"
+    type: string
+    hidden: yes
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${name} ;;
+  }
+
   dimension: view_file_key {
     label: "View File Key"
     type: string
