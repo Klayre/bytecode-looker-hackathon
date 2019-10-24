@@ -204,7 +204,7 @@ view: models__explores {
   dimension: label {
     label: "Label"
     type: string
-    sql: ex.value:label::varchar as label ;;
+    sql: ex.value:label::varchar ;;
   }
 
   dimension: name {
@@ -285,7 +285,7 @@ view: models__explores {
   dimension: view_name {
     label: "View Name"
     type: string
-    sql: ex.value:view_name::varchar as view_name ;;
+    sql: ex.value:view_name::varchar ;;
   }
 
   measure: count {
