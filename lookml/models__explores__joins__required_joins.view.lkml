@@ -23,9 +23,9 @@ view: models__explores__joins__required_joins {
 
   dimension: view_name {
     group_label: "Required Joins"
-    label: "View Name"
+    label: "Required Join View Name"
     type: string
-    sql: jrag.value::varchar ;;
+    sql: jrj.value::varchar ;;
   }
 
   measure: count {

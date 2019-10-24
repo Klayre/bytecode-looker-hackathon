@@ -72,6 +72,12 @@ view: models__explores {
     sql:array_to_string(parse_json(${always_joins}), ', ') ;;
   }
 
+  dimension: base_view_name {
+    label: "Base View Name"
+    type: string
+    sql: COALESCE(${from}, ${view_name}, ${name}) ;;
+  }
+
   dimension: cancel_grouping_fields {
     group_label: "Cancel Grouping Fields"
     label: "Cancel Grouping Fields JSON"
@@ -201,7 +207,7 @@ view: models__explores {
   dimension: label {
     label: "Label"
     type: string
-    sql: ex.value:label::varchar as label ;;
+    sql: ex.value:label::varchar ;;
   }
 
   dimension: name {
@@ -282,7 +288,7 @@ view: models__explores {
   dimension: view_name {
     label: "View Name"
     type: string
-    sql: ex.value:view_name::varchar as view_name ;;
+    sql: ex.value:view_name::varchar ;;
   }
 
   measure: count {
