@@ -1,5 +1,6 @@
 view: models__explores {
   view_label: "Explores"
+#   derived_table: {
 #     sql: select  m.sha as model_sha,
 #         m.path as model_path,
 #         m.explores::variant as explores,
@@ -31,13 +32,14 @@ view: models__explores {
 #         ex.value:view_name::varchar as view_name
 # from lookml.models m
 # , lateral flatten(input => m.explores) ex ;;
+#   }
 
 
   dimension: explores_pk {
     label: "Explores PK"
     type: string
     primary_key: yes
-    sql: ${models.model_pk}  || '-' ${name} ;;
+    sql: ${models.model_pk}  || '-' || ${name} ;;
     hidden: yes
   }
 
@@ -91,6 +93,7 @@ view: models__explores {
     label: "Case Sensitive"
     type: string
     sql: ex.value:case_sensitive::varchar  ;;
+#     sql: ${TABLE}.case_sensitive ;;
   }
 
   dimension: case_sensitive_yn {

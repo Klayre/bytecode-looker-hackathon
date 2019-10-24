@@ -16,7 +16,8 @@ explore: model_files {
   join: models {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${model_files.model_file_pk} = ${models.model_pk} ;;
+    sql:, ${models.SQL_TABLE_NAME} ;;
+    sql_where: ${model_files.model_file_pk} = ${models.model_pk}  ;;
   }
     # Model level joins
     join: models__access_grants {
