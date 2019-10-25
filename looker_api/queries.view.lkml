@@ -80,6 +80,11 @@ view: queries {
     sql: ${TABLE}."EXPANDED_SHARE_URL" ;;
   }
 
+  dimension: field {
+    type: string
+    sql: REPLACE(fld.value,'"','') ;;
+  }
+
   dimension: fields {
     type: string
     sql: ${TABLE}."FIELDS" ;;
