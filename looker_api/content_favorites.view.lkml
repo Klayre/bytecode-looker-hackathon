@@ -1,11 +1,11 @@
-view: dashboards {
-  view_label: "Dashboards"
-  sql_table_name: LOOKER.DASHBOARDS ;;
+view: content_favorites {
+  view_label: "Content Favorites"
+  sql_table_name: LOOKER.CONTENT_FAVORITES ;;
   drill_fields: [detail*]
 
   dimension: id {
     group_label: "Keys/IDs"
-    label: "Dashboard ID"
+    label: "Content Favorite ID"
     primary_key: yes
     type: string
     sql: ${TABLE}.ID ;;
@@ -75,67 +75,44 @@ view: dashboards {
     sql: ${TABLE}.CONTENT_METADATA_ID ;;
   }
 
-  dimension: description {
-    label: "Dashboard Description"
+  dimension: dashboard {
+    label: "Dashboard JSON"
     type: string
-    sql: ${TABLE}.DESCRIPTION ;;
-  }
-
-  dimension: hidden {
-    label: "Is Hidden"
-    type: yesno
-    sql: ${TABLE}.HIDDEN ;;
-  }
-
-  dimension: query_timezone {
-    label: "Query Timezone"
-    type: string
-    sql: ${TABLE}.QUERY_TIMEZONE ;;
-  }
-
-  dimension: readonly {
-    label: "Is Read Only"
-    type: yesno
-    sql: ${TABLE}.READONLY ;;
-  }
-
-  dimension: refresh_interval {
-    label: "Refresh Interval"
-    type: string
-    sql: ${TABLE}.REFRESH_INTERVAL ;;
-  }
-
-  dimension: refresh_interval_to_i {
-    label: "Refresh Interval to i"
-    type: number
-    sql: ${TABLE}.REFRESH_INTERVAL_TO_I ;;
+    sql: ${TABLE}.DASHBOARD ;;
     hidden: yes
   }
 
-  dimension: space {
-    label: "Space JSON"
-    type: string
-    sql: ${TABLE}.SPACE ;;
-    hidden: yes
-  }
-
-  dimension: space_id {
-    group_label: "Keys/IDs"
-    label: "Space ID"
-    type: string
-    sql: ${space}:id ;;
-  }
-
-  dimension: space_name {
-    label: "Space Name"
-    type: string
-    sql: ${space}:name ;;
-  }
-
-  dimension: title {
+  dimension: dashboard_title {
     label: "Dashboard Title"
     type: string
-    sql: ${TABLE}.TITLE ;;
+    sql: ${dashboard}:title ;;
+  }
+
+  dimension: dashboard_id {
+    group_label: "Keys/IDs"
+    label: "Dashboard ID"
+    type: string
+    sql: ${TABLE}.DASHBOARD_ID ;;
+  }
+
+  dimension: look {
+    label: "Look JSON"
+    type: string
+    sql: ${TABLE}.LOOK ;;
+    hidden: yes
+  }
+
+  dimension: look_title {
+    label: "Look Title"
+    type: string
+    sql: ${look}:title ;;
+  }
+
+  dimension: look_id {
+    group_label: "Keys/IDs"
+    label: "Look ID"
+    type: string
+    sql: ${TABLE}.LOOK_ID ;;
   }
 
   dimension: user_id {
@@ -145,31 +122,21 @@ view: dashboards {
     sql: ${TABLE}.USER_ID ;;
   }
 
-  # MEASURES
   measure: count {
-    label: "Number of Dashboards"
+    label: "Number of Favorites"
     type: count
-    drill_fields: [detail*]
+    drill_fields: [id]
   }
 
-
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       id,
-      title,
-      description,
-      space_id,
-      space_name,
-      content_metadata.id,
-      content_metadata.name,
-      users.id,
-      users.display_name,
-      users.first_name,
-      content_metadata.count,
-      dashboard_elements.count,
-      dashboard_filters.count,
-      dashboard_layouts.count
+      dashboard_id,
+      dashboard_title,
+      look_id,
+      look_title,
+      user.id,
+      user.display_name
     ]
   }
 }

@@ -105,6 +105,18 @@ view: homepages__sections__items {
     type: count
   }
 
+  measure: total_favorites {
+    label: "Total Favorites"
+    type: sum
+    sql: ${favorite_count} ;;
+  }
+
+  measure: total_views {
+    label: "Total Views"
+    type: sum
+    sql: ${view_count} ;;
+  }
+
   set: detail {
     fields: [
       id,

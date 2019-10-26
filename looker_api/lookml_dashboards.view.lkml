@@ -1,11 +1,14 @@
 view: lookml_dashboards {
-  sql_table_name: LOOKER.LOOKML_DASHBOARDS ;;
-  drill_fields: [id]
+  view_label: "LookML Dashboards"
+  sql_table_name: LOOKER.DASHBOARDS ;;
+  drill_fields: [detail*]
 
   dimension: id {
+    group_label: "Keys/IDs"
+    label: "LookML Dashboard ID"
     primary_key: yes
     type: string
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID ;;
   }
 
   dimension_group: _sdc_batched {
@@ -19,7 +22,8 @@ view: lookml_dashboards {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -33,7 +37,8 @@ view: lookml_dashboards {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -47,41 +52,136 @@ view: lookml_dashboards {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
-  dimension: model {
+  dimension: content_metadata_id {
+    group_label: "Keys/IDs"
+    label: "Content Metadata ID"
     type: string
-    sql: ${TABLE}."MODEL" ;;
+    sql: ${TABLE}.CONTENT_METADATA_ID ;;
+  }
+
+  dimension: description {
+    label: "Dashboard Description"
+    type: string
+    sql: ${TABLE}.DESCRIPTION ;;
+  }
+
+  dimension: folder {
+    label: "Folder JSON"
+    type: string
+    sql: ${TABLE}.FOLDER ;;
+    hidden: yes
+  }
+
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${folder}:id ;;
+  }
+
+  dimension: hidden {
+    label: "Is Hidden"
+    type: yesno
+    sql: ${TABLE}.HIDDEN ;;
+  }
+
+  dimension: query_timezone {
+    label: "Query Timezone"
+    type: string
+    sql: ${TABLE}.QUERY_TIMEZONE ;;
   }
 
   dimension: readonly {
+    label: "Is Read Only"
     type: yesno
-    sql: ${TABLE}."READONLY" ;;
+    sql: ${TABLE}.READONLY ;;
+  }
+
+  dimension: refresh_interval {
+    label: "Refresh Interval"
+    type: string
+    sql: ${TABLE}.REFRESH_INTERVAL ;;
+  }
+
+  dimension: refresh_interval_to_i {
+    label: "Refresh Interval to i"
+    type: number
+    sql: ${TABLE}.REFRESH_INTERVAL_TO_I ;;
+    hidden: yes
   }
 
   dimension: space {
+    label: "Space JSON"
     type: string
-    sql: ${TABLE}."SPACE" ;;
+    sql: ${TABLE}.SPACE ;;
+    hidden: yes
+  }
+
+  dimension: space_id {
+    group_label: "Keys/IDs"
+    label: "Space ID"
+    type: string
+    sql: ${space}:id ;;
+  }
+
+  dimension: space_name {
+    label: "Space Name"
+    type: string
+    sql: ${space}:name ;;
   }
 
   dimension: title {
+    label: "LookML Dashboard Title"
     type: string
-    sql: ${TABLE}."TITLE" ;;
+    sql: ${TABLE}.TITLE ;;
+  }
+
+  dimension: user_id {
+    group_label: "Keys/IDs"
+    label: "User ID"
+    type: string
+    sql: ${TABLE}.USER_ID ;;
   }
 
   measure: count {
+    label: "Number of Dashboards"
     type: count
-    drill_fields: [id]
+    drill_fields: [detail*]
+  }
+
+  # ----- Sets of fields for drilling ------
+  set: detail {
+    fields: [
+      id,
+      title,
+      description,
+      space_id,
+      space_name,
+      content_metadata.id,
+      content_metadata.name,
+      users.id,
+      users.display_name,
+      users.first_name,
+      content_metadata.count,
+      dashboard_elements.count,
+      dashboard_filters.count,
+      dashboard_layouts.count
+    ]
   }
 }

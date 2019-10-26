@@ -111,6 +111,11 @@ view: users {
     sql: ${TABLE}."GROUP_IDS" ;;
   }
 
+  dimension: home_folder_id {
+    type: string
+    sql: ${TABLE}."HOME_FOLDER_ID" ;;
+  }
+
   dimension: home_space_id {
     type: string
     sql: ${TABLE}."HOME_SPACE_ID" ;;
@@ -139,6 +144,11 @@ view: users {
   dimension: models_dir_validated {
     type: yesno
     sql: ${TABLE}."MODELS_DIR_VALIDATED" ;;
+  }
+
+  dimension: personal_folder_id {
+    type: string
+    sql: ${TABLE}."PERSONAL_FOLDER_ID" ;;
   }
 
   dimension: personal_space_id {
