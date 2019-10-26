@@ -68,10 +68,10 @@ view: looks {
   }
 
   dimension: content_metadata_id {
+    group_label: "Keys/IDs"
+    label: "Content Metadata ID"
     type: string
-    # hidden: yes
     sql: ${TABLE}.CONTENT_METADATA_ID ;;
-    hidden: yes
   }
 
   dimension_group: created {

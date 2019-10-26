@@ -88,13 +88,13 @@ view: dashboard_filters {
   }
 
   dimension: dimension {
-    label: "Dimension"
+    label: "Dimension Name"
     type: string
     sql: ${TABLE}.DIMENSION ;;
   }
 
   dimension: explore {
-    label: "Explore"
+    label: "Explore Name"
     type: string
     sql: ${TABLE}.EXPLORE ;;
   }
@@ -128,6 +128,13 @@ view: dashboard_filters {
     sql: ${field}:name ;;
   }
 
+  dimension: field_scope {
+    group_label: "Field"
+    label: "Field Scope"
+    type: string
+    sql: ${field}:scope ;;
+  }
+
   dimension: field_type {
     group_label: "Field"
     label: "Field Type"
@@ -156,7 +163,7 @@ view: dashboard_filters {
   }
 
   dimension: model {
-    label: "Model"
+    label: "Model Name"
     type: string
     sql: ${TABLE}.MODEL ;;
   }

@@ -1,4 +1,4 @@
-view: explores__alias {
+view: explores__aliases {
   view_label: "Explores"
     # sql: select  ex.id,
     #               ex.name,

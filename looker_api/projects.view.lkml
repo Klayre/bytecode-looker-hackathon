@@ -1,11 +1,13 @@
 view: projects {
+  view_label: "Projects"
   sql_table_name: LOOKER.PROJECTS ;;
-  drill_fields: [id]
+  drill_fields: [detail*]
 
   dimension: id {
+    label: "Project ID"
     primary_key: yes
     type: string
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID ;;
   }
 
   dimension_group: _sdc_batched {
@@ -19,7 +21,8 @@ view: projects {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -33,7 +36,8 @@ view: projects {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -47,70 +51,84 @@ view: projects {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
   dimension: allow_warnings {
+    label: "Allow Warnings"
     type: yesno
-    sql: ${TABLE}."ALLOW_WARNINGS" ;;
+    sql: ${TABLE}.ALLOW_WARNINGS ;;
   }
 
   dimension: folders_enabled {
+    label: "Folders Enabled"
     type: yesno
-    sql: ${TABLE}."FOLDERS_ENABLED" ;;
+    sql: ${TABLE}.FOLDERS_ENABLED ;;
   }
 
   dimension: git_remote_url {
+    label: "Git Remote URL"
     type: string
-    sql: ${TABLE}."GIT_REMOTE_URL" ;;
+    sql: ${TABLE}.GIT_REMOTE_URL ;;
   }
 
   dimension: git_service_name {
+    label: "Git Service Name"
     type: string
-    sql: ${TABLE}."GIT_SERVICE_NAME" ;;
+    sql: ${TABLE}.GIT_SERVICE_NAME ;;
   }
 
   dimension: git_username {
+    label: "Git Username"
     type: string
-    sql: ${TABLE}."GIT_USERNAME" ;;
+    sql: ${TABLE}.GIT_USERNAME ;;
   }
 
   dimension: is_example {
+    label: "Is Example"
     type: yesno
-    sql: ${TABLE}."IS_EXAMPLE" ;;
+    sql: ${TABLE}.IS_EXAMPLE ;;
   }
 
   dimension: name {
+    label: "Project Name"
     type: string
-    sql: ${TABLE}."NAME" ;;
+    sql: ${TABLE}.NAME ;;
   }
 
   dimension: pull_request_mode {
+    label: "Pull Request Mode"
     type: string
-    sql: ${TABLE}."PULL_REQUEST_MODE" ;;
+    sql: ${TABLE}.PULL_REQUEST_MODE ;;
   }
 
   dimension: uses_git {
+    label: "Uses Git"
     type: yesno
-    sql: ${TABLE}."USES_GIT" ;;
+    sql: ${TABLE}.USES_GIT ;;
   }
 
   dimension: validation_required {
+    label: "Validation Required"
     type: yesno
-    sql: ${TABLE}."VALIDATION_REQUIRED" ;;
+    sql: ${TABLE}.VALIDATION_REQUIRED ;;
   }
 
   measure: count {
+    label: "Number of Projects"
     type: count
     drill_fields: [detail*]
   }
@@ -119,11 +137,13 @@ view: projects {
   set: detail {
     fields: [
       id,
+      name,
       git_service_name,
       git_username,
-      name,
       git_branches.count,
-      project_files.count
+      project_files.count,
+      lookml_models.count,
+      explores.count
     ]
   }
 }

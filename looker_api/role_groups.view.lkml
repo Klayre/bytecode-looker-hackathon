@@ -1,11 +1,14 @@
 view: role_groups {
+  view_label: "Role Groups"
   sql_table_name: LOOKER.ROLE_GROUPS ;;
-  drill_fields: [id]
+  drill_fields: [detail*]
 
   dimension: id {
+    group_label: "Keys/IDs"
+    label: "Group ID"
     primary_key: yes
     type: string
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID ;;
   }
 
   dimension_group: _sdc_batched {
@@ -19,7 +22,8 @@ view: role_groups {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -33,7 +37,8 @@ view: role_groups {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -47,42 +52,59 @@ view: role_groups {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
   dimension: can_add_to_content_metadata {
+    label: "Can Add to Content Metadata"
     type: yesno
-    sql: ${TABLE}."CAN_ADD_TO_CONTENT_METADATA" ;;
+    sql: ${TABLE}.CAN_ADD_TO_CONTENT_METADATA ;;
   }
 
   dimension: name {
+    label: "Group Name"
     type: string
-    sql: ${TABLE}."NAME" ;;
+    sql: ${TABLE}.NAME ;;
   }
 
   dimension: role_id {
+    group_label: "Keys/IDs"
+    label: "Role ID"
     type: string
-    # hidden: yes
-    sql: ${TABLE}."ROLE_ID" ;;
+    sql: ${TABLE}.ROLE_ID ;;
   }
 
   dimension: user_count {
+    label: "User Count"
     type: number
-    sql: ${TABLE}."USER_COUNT" ;;
+    sql: ${TABLE}.USER_COUNT ;;
   }
 
   measure: count {
+    label: "Number of Role Groups"
     type: count
-    drill_fields: [id, name, roles.id, roles.name]
+    drill_fields: [detail*]
+  }
+
+  set: detail {
+    fields: [
+      id,
+      name,
+      roles.id,
+      roles.name
+    ]
   }
 }

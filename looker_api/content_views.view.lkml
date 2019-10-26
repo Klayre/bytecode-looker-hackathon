@@ -138,8 +138,21 @@ view: content_views {
   }
 
   measure: count {
+    label: "Number of Content Views"
     type: count
-    drill_fields: [id]
+    drill_fields: [detail*]
+  }
+
+  measure: total_favorites {
+    label: "Total Favorites"
+    type: sum
+    sql: ${favorite_count} ;;
+  }
+
+  measure: total_views {
+    label: "Total Views"
+    type: sum
+    sql: ${view_count} ;;
   }
 
   set: detail {

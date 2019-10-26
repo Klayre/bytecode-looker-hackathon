@@ -81,6 +81,13 @@ view: content_metadata {
     sql: ${TABLE}.DASHBOARD_ID ;;
   }
 
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${TABLE}.FOLDER_ID ;;
+  }
+
   dimension: inheriting_id {
     group_label: "Keys/IDs"
     label: "Inheriting ID"
@@ -125,7 +132,6 @@ view: content_metadata {
     group_label: "Keys/IDs"
     label: "Space ID"
     type: string
-    # hidden: yes
     sql: ${TABLE}.SPACE_ID ;;
   }
 

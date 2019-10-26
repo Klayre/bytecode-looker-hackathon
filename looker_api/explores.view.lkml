@@ -157,19 +157,19 @@ view: explores {
     hidden: yes
   }
 
-  dimension: fields_list {
-    group_label: "Fields"
-    label: "Fields List"
-    type: string
-    sql: array_to_string(parse_json(${fields}), ', ') ;;
-  }
-
   dimension: files {
     group_label: "Files"
     label: "Files JSON"
     type: string
     sql: ${TABLE}.FILES ;;
     hidden: yes
+  }
+
+  dimension: files_list {
+    group_label: "Files"
+    label: "Files List"
+    type: string
+    sql: array_to_string(parse_json(${files}), ', ') ;;
   }
 
   dimension: group_label {
