@@ -1,18 +1,28 @@
 view: explores__scopes {
   view_label: "Explores"
-#   sql: select  ex.id,
-#                 ex.name,
-#                 ex.scopes::variant as aliases,
-#                 scp.value::varchar as scope
-#         from looker.explores ex
-#         , lateral flatten(input => ex.scopes) scp ;;
+  derived_table: {
+    sql: select  ex.id as explore_id,
+                  ex.name as explore_name,
+                  ex.scopes::variant as scopes,
+                  scp.value::varchar as scope
+          from looker.explores ex
+          , lateral flatten(input => ex.scopes) scp ;;
+  }
 
   dimension: scopes_pk {
     group_label: "Scopes"
     label: "Scopes PK"
     type: string
     primary_key: yes
-    sql: ${explores.id} || '-' || ${scope} ;;
+    sql: ${explore_id} || '-' || ${scope} ;;
+    hidden: yes
+  }
+
+  dimension: explore_id {
+    group_label: "Scopes"
+    label: "Explore ID"
+    type: string
+    sql: ${TABLE}.explore_id ;;
     hidden: yes
   }
 
@@ -20,7 +30,7 @@ view: explores__scopes {
     group_label: "Scopes"
     label: "Scope"
     type: string
-    sql: scp.value::varchar ;;
+    sql: ${TABLE}.scope ;;
   }
 
 

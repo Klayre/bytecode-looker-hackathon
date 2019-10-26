@@ -61,7 +61,7 @@ select  ex.id as explore_id,
         dim.value:"type"::varchar as "type",
         dim.value:user_attribute_filter_types::variant as user_attribute_filter_types,
         dim.value:value_format::varchar as value_format,
-        dim.value:"view"::varchar as "view",
+        dim.value:"view"::varchar as view_name,
         dim.value:view_label::varchar as view_label,
         dim.value:week_start_day::varchar as week_start_day
 from looker.explores ex
@@ -129,7 +129,7 @@ select  ex.id as explore_id,
         dim.value:"type"::varchar as "type",
         dim.value:user_attribute_filter_types::variant as user_attribute_filter_types,
         dim.value:value_format::varchar as value_format,
-        dim.value:"view"::varchar as "view",
+        dim.value:"view"::varchar as view_name,
         dim.value:view_label::varchar as view_label,
         dim.value:week_start_day::varchar as week_start_day
 from looker.explores ex
@@ -197,7 +197,7 @@ select  ex.id as explore_id,
         dim.value:"type"::varchar as "type",
         dim.value:user_attribute_filter_types::variant as user_attribute_filter_types,
         dim.value:value_format::varchar as value_format,
-        dim.value:"view"::varchar as "view",
+        dim.value:"view"::varchar as view_name,
         dim.value:view_label::varchar as view_label,
         dim.value:week_start_day::varchar as week_start_day
 from looker.explores ex
@@ -265,7 +265,7 @@ select  ex.id as explore_id,
         dim.value:"type"::varchar as "type",
         dim.value:user_attribute_filter_types::variant as user_attribute_filter_types,
         dim.value:value_format::varchar as value_format,
-        dim.value:"view"::varchar as "view",
+        dim.value:"view"::varchar as view_name,
         dim.value:view_label::varchar as view_label,
         dim.value:week_start_day::varchar as week_start_day
 from looker.explores ex
@@ -384,6 +384,7 @@ from looker.explores ex
   }
 
   dimension: label {
+    label: "Field Label Long"
     type: string
     sql: ${TABLE}.LABEL ;;
   }
@@ -394,6 +395,7 @@ from looker.explores ex
   }
 
   dimension: label_short {
+    label: "Field Label"
     type: string
     sql: ${TABLE}.LABEL_SHORT ;;
   }
@@ -471,6 +473,7 @@ from looker.explores ex
   }
 
   dimension: name {
+    label: "Field Name"
     type: string
     sql: ${TABLE}.NAME ;;
   }
@@ -612,9 +615,9 @@ from looker.explores ex
     sql: ${TABLE}.VALUE_FORMAT ;;
   }
 
-  dimension: view {
+  dimension: view_name {
     type: string
-    sql: ${TABLE}.view ;;
+    sql: ${TABLE}.view_name ;;
   }
 
   dimension: view_label {
@@ -636,7 +639,7 @@ from looker.explores ex
     fields: [
       explore_id,
       explore_name,
-      view,
+      view_name,
       scope,
       name,
       label,

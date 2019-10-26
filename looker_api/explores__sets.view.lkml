@@ -1,22 +1,23 @@
 view: explores__sets {
   view_label: "Explores"
-#   sql:  select  ex.id,
-#                 ex.name,
-#                 ex.sets::variant as sets,
-#                 "set".value::variant as "set",
-#                 "set".value:name::varchar as set_name,
-#                 "set".value:value::variant as field_list,
-#                 setfld.value::varchar as field_name
-#         from looker.explores ex
-#         , lateral flatten(input => ex.sets) "set"
-#         , lateral flatten(input => "set".value:value) setfld ;;
+  derived_table: {
+    sql:  select  ex.id as explore_id,
+                  ex.name as explore_name,
+                  "set".value::variant as "set",
+                  "set".value:name::varchar as set_name,
+                  "set".value:value::variant as field_list,
+                  setfld.value::varchar as field_name
+          from looker.explores ex
+          , lateral flatten(input => ex.sets) "set"
+          , lateral flatten(input => "set".value:value) setfld ;;
+  }
 
   dimension: sets_pk {
     group_label: "Sets"
     label: "Sets PK"
     type: string
     primary_key: yes
-    sql: ${explores.id} || '-' || ${set_name} || '-' || ${field_name} ;;
+    sql: ${explore_id} || '-' || ${set_name} || '-' || ${field_name} ;;
     hidden: yes
   }
 
@@ -24,7 +25,15 @@ view: explores__sets {
     group_label: "Sets"
     label: "Sets Key"
     type: string
-    sql: ${explores.id} || '-' || ${set_name} ;;
+    sql: ${explore_id} || '-' || ${set_name} ;;
+    hidden: yes
+  }
+
+  dimension: explore_id {
+    group_label: "Scopes"
+    label: "Explore ID"
+    type: string
+    sql: ${TABLE}.explore_id ;;
     hidden: yes
   }
 
@@ -32,14 +41,14 @@ view: explores__sets {
     group_label: "Sets"
     label: "Set Name"
     type: string
-    sql: "set".value:name::varchar ;;
+    sql: ${TABLE}.set_name ;;
   }
 
   dimension: field_name {
     group_label: "Sets"
     label: "Field Name"
     type: string
-    sql: setfld.value::varchar ;;
+    sql: ${TABLE}.field_name ;;
   }
 
   measure: count {

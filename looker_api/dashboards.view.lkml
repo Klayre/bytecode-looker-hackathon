@@ -112,6 +112,12 @@ view: dashboards {
     hidden: yes
   }
 
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/dashboards/' || ${id} ;;
+  }
+
   dimension: space {
     label: "Space JSON"
     type: string
@@ -136,6 +142,10 @@ view: dashboards {
     label: "Dashboard Title"
     type: string
     sql: ${TABLE}.TITLE ;;
+    link: {
+      label: "Open Dashboard"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: user_id {

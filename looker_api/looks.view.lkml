@@ -244,6 +244,10 @@ view: looks {
     label: "Look Title"
     type: string
     sql: ${TABLE}.TITLE ;;
+    link: {
+      label: "Open Look"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension_group: updated {

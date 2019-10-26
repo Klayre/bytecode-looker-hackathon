@@ -29,7 +29,15 @@ view: queries__sorts {
     group_label: "Sort Fields"
     label: "Sort Field"
     type: string
-    sql: ${TABLE}.sort_field ;;
+    sql: REPLACE(${TABLE}.sort_field, ' desc', '') ;;
+  }
+
+  dimension: sort_direction {
+    group_label: "Sort Fields"
+    label: "Sort Direction"
+    type: string
+    sql: CASE WHEN RIGHT(${TABLE}.sort_field, 5) = ' desc' THEN 'descending'
+          ELSE 'ascending' END ;;
   }
 
   measure: count {

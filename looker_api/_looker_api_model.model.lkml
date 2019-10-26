@@ -27,45 +27,6 @@ explore: content_usage {
 }
 
 
-# Explore to show organization of Content
-explore: content_metadata {
-  group_label: "Looker API"
-  label: "Content"
-  # content_views: view_count, favorite_count, per user and by last view date
-  join: content_views {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
-  }
-  join: users {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${content_views.user_id} = ${users.id} ;;
-  }
-  join: dashboards {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${content_metadata.dashboard_id} = ${dashboards.id} ;;
-  }
-  join: looks {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${content_metadata.dashboard_id} = ${dashboards.id} ;;
-  }
-  join: folders {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${content_metadata.folder_id} = ${folders.id} ;;
-  }
-  join: spaces {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${content_metadata.space_id} = ${spaces.id} ;;
-  }
-}
-
-
-
 # Queries Explore
 explore: queries {
   group_label: "Looker API"
@@ -112,6 +73,83 @@ explore: queries {
     relationship: one_to_one
     sql_on: ${queries__fields_all.fields_pk} = ${queries__sorts.sorts_pk} ;;
   }
+  join: looks {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${looks.query_id} ;;
+  }
+  join: dashboard_elements {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${dashboard_elements.query_id} ;;
+  }
+  join: dashboards {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: merge_queries__source_queries {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${merge_queries__source_queries.query_id} ;;
+  }
+  join: merge_queries {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${merge_queries__source_queries.merge_query_id} = ${merge_queries.id} ;;
+  }
+  join: merge_dashboard_elements {
+    from: dashboard_elements
+    view_label: "Merge Dashboard Elements"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${merge_dashboard_elements.query_id} ;;
+  }
+  join: merge_dashboards {
+    from: dashboards
+    view_label: "Merge Dashboards"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${merge_dashboard_elements.dashboard_id} = ${merge_dashboards.id} ;;
+  }
+}
+
+
+# Explore to show organization of Content
+explore: content_metadata {
+  group_label: "Looker API"
+  label: "Content"
+  # content_views: view_count, favorite_count, per user and by last view date
+  join: content_views {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
+  }
+  join: users {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_views.user_id} = ${users.id} ;;
+  }
+  join: dashboards {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_metadata.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: looks {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_metadata.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: folders {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_metadata.folder_id} = ${folders.id} ;;
+  }
+  join: spaces {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_metadata.space_id} = ${spaces.id} ;;
+  }
 }
 
 
@@ -142,18 +180,17 @@ explore: explores {
   join: explores__scopes {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${explores.scopes}) scp ;;
+    sql_on:  ${explores.id} = ${explores.scopes} ;;
   }
   join: explores__sets {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${explores.sets}) "set"
-         , lateral flatten(input => "set".value:value) setfld ;;
+    sql_on: ${explores.id} = ${explores__sets.explore_id} ;;
   }
   join: explores__fields {
     type: left_outer
     relationship: one_to_many
-    sql: ${explores.id} = ${explores__fields.explore_id} ;;
+    sql_on: ${explores.id} = ${explores__fields.explore_id} ;;
   }
   join: lookml_models {
     type: left_outer

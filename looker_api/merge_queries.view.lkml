@@ -76,7 +76,7 @@ view: merge_queries {
   }
 
   dimension: pivots_list {
-    label: "Pivotss List"
+    label: "Pivots List"
     type: string
     sql: array_to_string(parse_json(${pivots}), ', ') ;;
   }

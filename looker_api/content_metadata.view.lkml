@@ -112,6 +112,10 @@ view: content_metadata {
     label: "Content Name"
     type: string
     sql: ${TABLE}.NAME ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: parent_id {
@@ -119,6 +123,16 @@ view: content_metadata {
     label: "Parent ID"
     type: string
     sql: ${TABLE}.PARENT_ID ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: CASE WHEN ${content_type} = 'dashboard' THEN '/dashboards/' || ${dashboard_id}
+              WHEN ${content_type} = 'look' THEN '/looks/' || ${look_id}
+              WHEN ${content_type} = 'space' THEN '/spaces/' || ${space_id}
+              WHEN ${content_type} = 'folder' THEN '/folders/' || ${folder_id}
+              ELSE NULL END ;;
   }
 
   dimension: slug {
