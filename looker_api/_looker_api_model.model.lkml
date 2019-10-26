@@ -27,10 +27,11 @@ explore: content_usage {
 }
 
 
-
+# Explore to show organization of Content
 explore: content_metadata {
   group_label: "Looker API"
   label: "Content"
+  # content_views: view_count, favorite_count, per user and by last view date
   join: content_views {
     type: left_outer
     relationship: one_to_many
@@ -65,6 +66,51 @@ explore: content_metadata {
 
 
 
+# Queries Explore
+explore: queries {
+  group_label: "Looker API"
+  label: "Queries"
+  join: queries__dynamic_fields {
+    type: left_outer
+    relationship: one_to_many
+    sql: , lateral flatten(input => parse_json(${queries.dynamic_fields})) qdf ;;
+  }
+  join: queries__filters {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${queries__filters.query_id} ;;
+  }
+  join: queries__fields {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${queries__fields.query_id} ;;
+  }
+  join: queries__filter_fields {
+    from: queries__filters
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields.query_id} = ${queries__filter_fields.query_id}
+      and ${queries__fields.field_name} = ${queries__filter_fields.filter_field} ;;
+  }
+  join: queries__fill_fields {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields.fields_pk} = ${queries__fill_fields.fills_pk} ;;
+  }
+  join: queries__pivots {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields.fields_pk} = ${queries__pivots.pivots_pk} ;;
+  }
+  join: queries__sorts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields.fields_pk} = ${queries__sorts.sorts_pk} ;;
+  }
+}
+
+
+# Explores down to fields - with related lookml_model, project, file, connection info
 explore: explores {
   group_label: "Looker API"
   label: "Explores"
@@ -124,5 +170,56 @@ explore: explores {
     relationship: many_to_one
     sql_on: ${explores.source_file} = ${project_files.title}
       and ${explores.project_name} = ${project_files.project_id} ;;
+  }
+}
+
+
+# Roles and related Sets, Groups, etc.
+explore: roles {
+  group_label: "Looker API"
+  label: "Roles"
+  fields: [
+    ALL_FIELDS*,
+    -permissions.permission
+    ]
+  join: model_sets {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${roles.model_set_id} = ${model_sets.id} ;;
+  }
+  join: model_sets__models {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${model_sets.id} = ${model_sets__models.model_set_id} ;;
+  }
+  join: lookml_models {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${model_sets__models.model} = ${lookml_models.name} ;;
+  }
+  join: permission_sets {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${roles.permission_set_id} = ${permission_sets.id} ;;
+  }
+  join: permission_sets__permissions {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${permission_sets.id} = ${permission_sets__permissions.permission_set_id} ;;
+  }
+  join: permissions {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${permission_sets__permissions.permission} = ${permissions.permission} ;;
+  }
+  join: role_groups {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${roles.id} = ${role_groups.role_id} ;;
+  }
+  join: groups {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${role_groups.id} = ${groups.id} ;;
   }
 }

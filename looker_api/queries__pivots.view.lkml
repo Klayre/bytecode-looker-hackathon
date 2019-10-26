@@ -1,17 +1,27 @@
 view: queries__pivots {
   view_label: "Queries"
-#    sql: select  q.id,
-#                 q.pivots::variant as pivots,
-#                 qp.value::varchar as pivot_field
-#         from looker.queries q
-#         , lateral flatten(input => q.pivots) qp ;;
+  derived_table: {
+   sql: select  q.id as query_id,
+                q.pivots::variant as pivots,
+                qp.value::varchar as pivot_field
+        from looker.queries q
+        , lateral flatten(input => q.pivots) qp ;;
+  }
 
   dimension: pivots_pk {
     group_label: "Pivots"
     label: "pivots PK"
     type: string
     primary_key: yes
-    sql: ${queries.id} || '-' || ${pivot_field} ;;
+    sql: ${query_id} || '-' || ${pivot_field} ;;
+    hidden: yes
+  }
+
+  dimension: query_id {
+    group_label: "Pivots"
+    label: "Query ID"
+    type: string
+    sql: ${TABLE}.query_id ;;
     hidden: yes
   }
 
@@ -19,13 +29,12 @@ view: queries__pivots {
     group_label: "Pivots"
     label: "Pivot Field"
     type: string
-    sql: qp.value::varchar ;;
+    sql: ${TABLE}.pivot_field ;;
   }
-
 
   set: detail {
     fields: [
-      queries.id,
+      query_id,
       pivot_field
     ]
   }

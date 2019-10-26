@@ -1,7 +1,9 @@
 view: permissions {
+  view_label: "Permission Sets"
   sql_table_name: LOOKER.PERMISSIONS ;;
 
   dimension: permission {
+    group_label: "Permissions"
     label: "Permission"
     type: string
     primary_key: yes
@@ -66,12 +68,14 @@ view: permissions {
   }
 
   dimension: description {
+    group_label: "Permissions"
     label: "Permission Description"
     type: string
     sql: ${TABLE}.DESCRIPTION ;;
   }
 
   dimension: parent {
+    group_label: "Permissions"
     label: "Parent"
     type: string
     sql: ${TABLE}.PARENT ;;

@@ -86,6 +86,7 @@ view: permission_sets {
   }
 
   dimension: permissions {
+    group_label: "Permissions"
     label: "Permissions JSON"
     type: string
     sql: ${TABLE}.PERMISSIONS ;;
@@ -93,6 +94,7 @@ view: permission_sets {
   }
 
   dimension: permissions_list {
+    group_label: "Permissions"
     label: "Permissions List"
     type: string
     sql: array_to_string(parse_json(${permissions}), ', ') ;;

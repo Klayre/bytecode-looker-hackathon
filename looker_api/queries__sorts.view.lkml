@@ -1,17 +1,27 @@
 view: queries__sorts {
   view_label: "Queries"
-#    sql: select  q.id,
-#                 q.sorts::variant as sorts,
-#                 qs.value::varchar as sort_field
-#         from looker.queries q
-#         , lateral flatten(input => q.sorts) qs ;;
+  derived_table: {
+   sql: select  q.id as query_id,
+                q.sorts::variant as sorts,
+                qs.value::varchar as sort_field
+        from looker.queries q
+        , lateral flatten(input => q.sorts) qs ;;
+   }
 
   dimension: sorts_pk {
     group_label: "Sorts"
     label: "Sorts PK"
     type: string
     primary_key: yes
-    sql: ${queries.id} || '-' || ${sort_field} ;;
+    sql: ${query_id} || '-' || ${sort_field} ;;
+    hidden: yes
+  }
+
+  dimension: query_id {
+    group_label: "Sorts"
+    label: "Query ID"
+    type: string
+    sql: ${TABLE}.query_id ;;
     hidden: yes
   }
 
@@ -19,13 +29,12 @@ view: queries__sorts {
     group_label: "Sorts"
     label: "Sort Field"
     type: string
-    sql: qs.value::varchar ;;
+    sql: ${TABLE}.sort_field ;;
   }
-
 
   set: detail {
     fields: [
-      queries.id,
+      query_id,
       sort_field
     ]
   }

@@ -81,10 +81,11 @@ view: queries {
   }
 
   dimension: dynamic_fields {
-    group_label: "Table Calcs"
-    label: "Dynamic Fields"
+    group_label: "Dynamic Fields"
+    label: "Dynamic Fields JSON"
     type: string
     sql: ${TABLE}.DYNAMIC_FIELDS ;;
+    hidden: yes
   }
 
   dimension: expanded_share_url {
@@ -135,14 +136,6 @@ view: queries {
     label: "Filters JSON"
     type: string
     sql: ${TABLE}.FILTERS ;;
-    hidden: yes
-  }
-
-  dimension: filters_adj {
-    group_label: "Filters"
-    label: "Filters Adj JSON"
-    type: string
-    sql: REPLACE(${filters},'": "',': ') ;;
     hidden: yes
   }
 
