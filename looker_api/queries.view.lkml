@@ -96,13 +96,12 @@ view: queries {
   }
 
   dimension: field {
-    group_label: "Fields"
     type: string
     sql: REPLACE(fld.value,'','') ;;
   }
 
   dimension: fields {
-    group_label: "Fields"
+    group_label: "Select Fields"
     label: "Field JSON"
     type: string
     sql: ${TABLE}.FIELDS ;;
@@ -110,8 +109,8 @@ view: queries {
   }
 
   dimension: fields_list {
-    group_label: "Fields"
-    label: "Fields List"
+    group_label: "Select Fields"
+    label: "Select Fields List"
     type: string
     sql: array_to_string(parse_json(${fields}), ', ') ;;
   }
@@ -132,7 +131,7 @@ view: queries {
   }
 
   dimension: filters {
-    group_label: "Filters"
+    group_label: "Filter Fields"
     label: "Filters JSON"
     type: string
     sql: ${TABLE}.FILTERS ;;
@@ -140,7 +139,7 @@ view: queries {
   }
 
   dimension: filters_config {
-    group_label: "Filters"
+    group_label: "Filter Fields"
     label: "Filter Config JSON"
     type: string
     sql: ${TABLE}.FILTER_CONFIG ;;
@@ -166,7 +165,7 @@ view: queries {
   }
 
   dimension: pivots {
-    group_label: "Pivots"
+    group_label: "Pivot Fields"
     label: "Pivot Fields JSON"
     type: string
     sql: ${TABLE}.PIVOTS ;;
@@ -174,7 +173,7 @@ view: queries {
   }
 
   dimension: pivots_list {
-    group_label: "Pivots"
+    group_label: "Pivot Fields"
     label: "Pivot Fields List"
     type: string
     sql: array_to_string(parse_json(${pivots}), ', ') ;;
@@ -213,14 +212,14 @@ view: queries {
   }
 
   dimension: sorts {
-    group_label: "Sorts"
+    group_label: "Sort Fields"
     label: "Sorts JSON"
     type: string
     sql: ${TABLE}.SORTS ;;
   }
 
   dimension: sorts_list {
-    group_label: "Sorts"
+    group_label: "Sort Fields"
     label: "sorts List"
     type: string
     sql: array_to_string(parse_json(${sorts}), ', ') ;;

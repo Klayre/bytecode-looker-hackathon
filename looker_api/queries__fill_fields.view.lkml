@@ -32,6 +32,12 @@ view: queries__fill_fields {
     sql: ${TABLE}.fill_field ;;
   }
 
+  measure: count {
+    label: "Number of Fill Fields"
+    type: count_distinct
+    sql: ${fills_pk} ;;
+  }
+
   set: detail {
     fields: [
       query_id,

@@ -9,7 +9,7 @@ view: queries__sorts {
    }
 
   dimension: sorts_pk {
-    group_label: "Sorts"
+    group_label: "Sort Fields"
     label: "Sorts PK"
     type: string
     primary_key: yes
@@ -18,7 +18,7 @@ view: queries__sorts {
   }
 
   dimension: query_id {
-    group_label: "Sorts"
+    group_label: "Sort Fields"
     label: "Query ID"
     type: string
     sql: ${TABLE}.query_id ;;
@@ -26,10 +26,16 @@ view: queries__sorts {
   }
 
   dimension: sort_field {
-    group_label: "Sorts"
+    group_label: "Sort Fields"
     label: "Sort Field"
     type: string
     sql: ${TABLE}.sort_field ;;
+  }
+
+  measure: count {
+    label: "Number of Sort Fields"
+    type: count_distinct
+    sql: ${sorts_pk} ;;
   }
 
   set: detail {

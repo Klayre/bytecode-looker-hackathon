@@ -80,32 +80,37 @@ explore: queries {
     relationship: one_to_many
     sql_on: ${queries.id} = ${queries__filters.query_id} ;;
   }
-  join: queries__fields {
+  join: queries__fields_all {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${queries.id} = ${queries__fields.query_id} ;;
+    sql_on: ${queries.id} = ${queries__fields_all.query_id} ;;
   }
   join: queries__filter_fields {
     from: queries__filters
     type: left_outer
     relationship: one_to_many
-    sql_on: ${queries__fields.query_id} = ${queries__filter_fields.query_id}
-      and ${queries__fields.field_name} = ${queries__filter_fields.filter_field} ;;
+    sql_on: ${queries__fields_all.query_id} = ${queries__filter_fields.query_id}
+      and ${queries__fields_all.field_name} = ${queries__filter_fields.filter_field} ;;
+  }
+  join: queries__fields_select {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__fields_select.fields_pk} ;;
   }
   join: queries__fill_fields {
     type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries__fields.fields_pk} = ${queries__fill_fields.fills_pk} ;;
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__fill_fields.fills_pk} ;;
   }
   join: queries__pivots {
     type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries__fields.fields_pk} = ${queries__pivots.pivots_pk} ;;
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__pivots.pivots_pk} ;;
   }
   join: queries__sorts {
     type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries__fields.fields_pk} = ${queries__sorts.sorts_pk} ;;
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__sorts.sorts_pk} ;;
   }
 }
 

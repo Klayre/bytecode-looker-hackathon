@@ -9,7 +9,7 @@ view: queries__pivots {
   }
 
   dimension: pivots_pk {
-    group_label: "Pivots"
+    group_label: "Pivot Fields"
     label: "pivots PK"
     type: string
     primary_key: yes
@@ -18,7 +18,7 @@ view: queries__pivots {
   }
 
   dimension: query_id {
-    group_label: "Pivots"
+    group_label: "Pivot Fields"
     label: "Query ID"
     type: string
     sql: ${TABLE}.query_id ;;
@@ -26,10 +26,16 @@ view: queries__pivots {
   }
 
   dimension: pivot_field {
-    group_label: "Pivots"
+    group_label: "Pivot Fields"
     label: "Pivot Field"
     type: string
     sql: ${TABLE}.pivot_field ;;
+  }
+
+  measure: count {
+    label: "Number of Pivot Fields"
+    type: count_distinct
+    sql: ${pivots_pk} ;;
   }
 
   set: detail {
