@@ -118,26 +118,21 @@ explore: models_explores_joins {
   group_label: "LookML"
   label: "Models Explores Joins"
   extends: [models_explores]
-  join: models__explores__joins {
+  join: models__explores__joins__views {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${models__explores.explore_id} = ${models__explores__joins.explore_id} ;;
+    sql_on: ${models__explores.explore_id} = ${models__explores__joins__views.explore_id} ;;
   }
   # Join level joins
   join: models__explores__joins__fields {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${models__explores__joins.fields}) jf ;;
+    sql_on: ${models__explores__joins__views.join_key} = ${models__explores__joins__fields.join_key};;
   }
   join: models__explores__joins__required_access_grants {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${models__explores__joins.required_access_grants}) jrag ;;
-  }
-  join: models__explores__joins__required_joins {
-    type: left_outer
-    relationship: one_to_many
-    sql: , lateral flatten(input => ${models__explores__joins.required_joins}) jrj ;;
+    sql_on: ${models__explores__joins__views.join_key} = ${models__explores__joins__required_access_grants.join_key} ;;
   }
 }
 

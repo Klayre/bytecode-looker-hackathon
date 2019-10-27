@@ -20,6 +20,7 @@ view: models__explores__joins__views {
         models.GIT_OWNER,
         models.GIT_REPOSITORY,
         models.PATH AS MODEL_PATH,
+        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
         ex.value:name::varchar  AS EXPLORE_NAME,
         COALESCE((ex.value:from::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar))  AS VIEW_NAME,
         NULL AS JOIN_NAME,
@@ -37,6 +38,7 @@ view: models__explores__joins__views {
         models.GIT_OWNER,
         models.GIT_REPOSITORY,
         models.PATH  AS MODEL_PATH,
+        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
         ex.value:name::varchar  AS EXPLORE_NAME,
         COALESCE((j.value:from::varchar), (j.value:name::varchar))  AS VIEW_NAME,
         j.value:name::varchar AS JOIN_NAME,
@@ -74,6 +76,7 @@ view: models__explores__joins__views {
   }
 
   dimension: explore_join_view_pk {
+    group_label: "Keys/IDs"
     label: "Explore Join View PK"
     type: string
     primary_key: yes
@@ -81,53 +84,81 @@ view: models__explores__joins__views {
     sql: ${join_key} || '-' || ${view_name} ;;
   }
 
-  dimension: model_key {
-    label: "Model Key"
-    type: string
-    hidden: yes
-    sql: ${TABLE}.MODEL_KEY ;;
-  }
-
-  dimension: explore_key {
-    label: "Explore Key"
-    type: string
-    hidden: yes
-    sql: ${TABLE}.EXPLORE_KEY  ;;
-  }
-
-  dimension: join_key {
-    label: "Join Key"
-    type: string
-    hidden: yes
-    sql: CASE WHEN ${join_name} IS NOT NULL THEN ${explore_key} || '-' || ${join_name}
-          ELSE NULL END ;;
-  }
-
-  dimension: view_key {
-    label: "View Key"
-    type: string
-    hidden: yes
-    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${view_name} ;;
-  }
-
-  dimension: explore_name {
-    label: "Explore Name"
-    type: string
-    sql: ${TABLE}.EXPLORE_NAME ;;
-    hidden: yes
-  }
-
   dimension: git_owner {
-    group_label: "Git"
+    group_label: "Keys/IDs"
     label: "Git Owner"
     type: string
     sql: ${TABLE}.GIT_OWNER ;;
   }
 
   dimension: git_repository {
-    label: "Git Repository"
+    group_label: "Keys/IDs"
     type: string
     sql: ${TABLE}.GIT_REPOSITORY ;;
+  }
+
+  dimension: model_key {
+    group_label: "Keys/IDs"
+    label: "Model Key"
+    type: string
+    sql: ${TABLE}.MODEL_KEY ;;
+  }
+
+  dimension: model_name {
+    group_label: "Keys/IDs"
+    label: "Model Name"
+    type: string
+    sql: ${TABLE}.MODEL_NAME ;;
+  }
+
+  dimension: model_path {
+    group_label: "Keys/IDs"
+    label: "Model Path"
+    type: string
+    sql: ${TABLE}.MODEL_PATH ;;
+  }
+
+  dimension: explore_id {
+    group_label: "Keys/IDs"
+    label: "Explore ID"
+    type: string
+    sql: ${model_name} || '::' || ${explore_name}  ;;
+  }
+
+  dimension: explore_key {
+    group_label: "Keys/IDs"
+    label: "Explore Key"
+    type: string
+    sql: ${TABLE}.EXPLORE_KEY  ;;
+  }
+
+  dimension: explore_name {
+    group_label: "Keys/IDs"
+    label: "Explore Name"
+    type: string
+    sql: ${TABLE}.EXPLORE_NAME ;;
+  }
+
+  dimension: join_key {
+    group_label: "Keys/IDs"
+    label: "Join Key"
+    type: string
+    sql: CASE WHEN ${join_name} IS NOT NULL THEN ${explore_key} || '-' || ${join_name}
+          ELSE NULL END ;;
+  }
+
+  dimension: view_key {
+    group_label: "Keys/IDs"
+    label: "View Key"
+    type: string
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${view_name} ;;
+  }
+
+  dimension: view_name {
+    group_label: "Keys/IDs"
+    label: "View Name"
+    type: string
+    sql: ${TABLE}.VIEW_NAME ;;
   }
 
   dimension: join_json {
@@ -154,22 +185,6 @@ view: models__explores__joins__views {
     type: string
     sql: ${TABLE}.JOIN_VIEW_TYPE ;;
   }
-
-  dimension: model_path {
-    group_label: "Git"
-    label: "Model Path"
-    type: string
-    sql: ${TABLE}.MODEL_PATH ;;
-  }
-
-  dimension: view_name {
-    label: "View Name"
-    type: string
-    sql: ${TABLE}.VIEW_NAME ;;
-    hidden: yes
-  }
-
-
 
   dimension: fields {
     group_label: "Fields"
