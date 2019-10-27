@@ -199,6 +199,11 @@ explore: explores {
     relationship: many_to_one
     sql_on: ${explores.model_name} = ${lookml_models.name} ;;
   }
+  join: project_files {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${explores__fields.source_file_path} = ${project_files.path} ;;
+  }
   join: connections {
     type: left_outer
     relationship: many_to_one
@@ -209,14 +214,23 @@ explore: explores {
     relationship: many_to_one
     sql_on: ${explores.project_name} = ${projects.name} ;;
   }
-  join: project_files {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${explores.source_file} = ${project_files.title}
-      and ${explores.project_name} = ${project_files.project_id} ;;
-  }
 }
 
+
+explore: lookml_models {
+  group_label: "Looker API"
+  label: "LookML Models"
+  join: lookml_models__connections {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${lookml_models.name} = ${lookml_models__connections.model_name} ;;
+  }
+  join: lookml_models__explores {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${lookml_models.name} = ${lookml_models__explores.model_name} ;;
+  }
+}
 
 # Roles and related Sets, Groups, etc.
 explore: roles {

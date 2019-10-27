@@ -4,6 +4,7 @@ view: explores__fields {
 -- Dimensions
 select  ex.id as explore_id,
         ex.name as explore_name,
+        ex.model_name as model_name,
         dim.value::variant as dim,
         dim.value:align::varchar as align,
         dim.value:can_filter::boolean as can_filter,
@@ -72,6 +73,7 @@ UNION
 -- Measures
 select  ex.id as explore_id,
         ex.name as explore_name,
+        ex.model_name as model_name,
         dim.value::variant as dim,
         dim.value:align::varchar as align,
         dim.value:can_filter::boolean as can_filter,
@@ -140,6 +142,7 @@ UNION
 -- Filters
 select  ex.id as explore_id,
         ex.name as explore_name,
+        ex.model_name as model_name,
         dim.value::variant as dim,
         dim.value:align::varchar as align,
         dim.value:can_filter::boolean as can_filter,
@@ -208,6 +211,7 @@ UNION
 -- Parameters
 select  ex.id as explore_id,
         ex.name as explore_name,
+        ex.model_name as model_name,
         dim.value::variant as dim,
         dim.value:align::varchar as align,
         dim.value:can_filter::boolean as can_filter,
@@ -273,16 +277,34 @@ from looker.explores ex
  ;;
   }
 
+  dimension: field_id {
+    group_label: "Keys/IDs"
+    label: "Field ID"
+    type: string
+    primary_key: yes
+    sql: ${explore_id} || '::' || ${name} ;;
+  }
+
   dimension: explore_id {
+    group_label: "Keys/IDs"
+    label: "Explore ID"
     type: string
     sql: ${TABLE}.EXPLORE_ID ;;
-    hidden: yes
   }
 
   dimension: explore_name {
+    group_label: "Keys/IDs"
+    label: "Keys/IDs"
     type: string
     sql: ${TABLE}.EXPLORE_NAME ;;
     hidden: yes
+  }
+
+  dimension: model_name {
+    group_label: "Keys/IDs"
+    label: "Model Name"
+    type: string
+    sql: ${TABLE}.MODEL_NAME ;;
   }
 
   dimension: field {

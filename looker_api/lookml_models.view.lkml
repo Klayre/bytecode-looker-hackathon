@@ -60,6 +60,7 @@ view: lookml_models {
   }
 
   dimension: allowed_db_connection_names {
+    group_label: "Connections"
     label: "Allowed DB Connections JSON"
     type: string
     sql: ${TABLE}.ALLOWED_DB_CONNECTION_NAMES ;;
@@ -67,12 +68,14 @@ view: lookml_models {
   }
 
   dimension: allowed_db_connections_list {
+    group_label: "Connections"
     label: "Allowed DB Connections List"
     type: string
     sql: array_to_string(parse_json(${allowed_db_connection_names}), ', ') ;;
   }
 
   dimension: explores {
+    group_label: "Explores"
     label: "Explores JSON"
     type: string
     sql: ${TABLE}.EXPLORES ;;
