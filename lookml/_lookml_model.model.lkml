@@ -37,7 +37,7 @@ explore: models_explores {
   join: models__explores {
     type: left_outer
     relationship: one_to_many
-    sql: ${model_files.model_file_pk} = ${models__explores.model_key}  ;;
+    sql_on: ${model_files.model_file_pk} = ${models__explores.model_key}  ;;
   }
   # Explore level joins
   join: models__explores__access_filters {
