@@ -121,27 +121,23 @@ explore: models_explores_joins {
   join: models__explores__joins {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${models__explores.joins}) j ;;
-    required_joins: [models__explores]
+    sql_on: ${models__explores.explore_id} = ${models__explores__joins.explore_id} ;;
   }
   # Join level joins
   join: models__explores__joins__fields {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => j.value:fields) jf ;;
-    required_joins: [models__explores, models__explores__joins]
+    sql: , lateral flatten(input => ${models__explores__joins.fields}) jf ;;
   }
   join: models__explores__joins__required_access_grants {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => j.value:required_access_grants) jrag ;;
-    required_joins: [models__explores, models__explores__joins]
+    sql: , lateral flatten(input => ${models__explores__joins.required_access_grants}) jrag ;;
   }
   join: models__explores__joins__required_joins {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => j.value:required_joins) jrj ;;
-    required_joins: [models__explores, models__explores__joins]
+    sql: , lateral flatten(input => ${models__explores__joins.required_joins}) jrj ;;
   }
 }
 
