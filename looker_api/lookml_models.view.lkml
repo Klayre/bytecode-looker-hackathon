@@ -86,21 +86,31 @@ view: lookml_models {
   }
 
   dimension: label {
-    label: "Label"
+    label: "Model Label"
     type: string
     sql: ${TABLE}.LABEL ;;
   }
 
   dimension: name {
-    label: "LookML Model Name"
+    label: "Model Name"
     type: string
     sql: ${TABLE}.NAME ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: project_name {
     label: "Project Name"
     type: string
     sql: ${TABLE}.PROJECT_NAME ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/projects/' || ${project_name} || '/files/' || ${name} ;;
   }
 
   dimension: unlimited_db_connections {

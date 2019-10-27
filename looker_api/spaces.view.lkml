@@ -141,6 +141,10 @@ view: spaces {
     label: "Space Name"
     type: string
     sql: ${TABLE}.NAME ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: parent_id {
@@ -148,6 +152,12 @@ view: spaces {
     label: "Parent Space ID"
     type: string
     sql: ${TABLE}.PARENT_ID ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/spaces/' || ${id} ;;
   }
 
   measure: count {

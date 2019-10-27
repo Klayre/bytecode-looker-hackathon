@@ -92,6 +92,12 @@ view: explores {
     hidden: yes
   }
 
+  dimension: base_view_name {
+    label: "View Name"
+    type: string
+    sql: COALESCE(${view_name}, ${name}) ;;
+  }
+
   dimension: can_explain {
     group_label: "Can"
     label: "Can Explain"
@@ -299,6 +305,12 @@ view: explores {
     label: "Tags List"
     type: string
     sql: array_to_string(parse_json(${tags}), ', ') ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/explore/' || ${model_name} || '/' || ${name} ;;
   }
 
   dimension: view_name {

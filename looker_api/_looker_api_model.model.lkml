@@ -2,6 +2,8 @@ connection: "snowflake_stitch"
 
 include: "*.view.lkml"                       # include all views in this project
 
+explore: project_files {}
+
 explore: content_usage {
   group_label: "Looker API"
   view_label: "Queries"

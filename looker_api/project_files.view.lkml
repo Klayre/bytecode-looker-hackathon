@@ -102,12 +102,22 @@ view: project_files {
     label: "File Title"
     type: string
     sql: ${TABLE}.TITLE ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: type {
     label: "File Type"
     type: string
     sql: ${TABLE}.TYPE ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/projects/' || ${project_id} || '/files/' || ${path};;
   }
 
   measure: count {
