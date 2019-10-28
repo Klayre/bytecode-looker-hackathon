@@ -242,13 +242,6 @@ explore: folders {
     relationship: one_to_many
     sql_on: ${folders.content_metadata_id} = ${folder_contents.parent_id} ;;
   }
-  join: parent_folder_contents {
-    view_label: "Parent Contents"
-    from: folders
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${folder_contents.parent_id} = ${parent_folder_contents.id} ;;
-  }
   join: folder_content_views {
     view_label: "Folder Content Views"
     from: content_views
