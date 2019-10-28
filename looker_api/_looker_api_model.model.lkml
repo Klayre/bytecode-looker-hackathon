@@ -338,6 +338,12 @@ explore: lookml_models {
     type: left_outer
     relationship: one_to_many
     sql_on: ${lookml_models.name} = ${lookml_models__connections.model_name} ;;
+    fields: []
+  }
+  join: connections {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${lookml_models__connections.connection} = ${connections.name} ;;
   }
   join: lookml_models__explores {
     type: left_outer
@@ -406,6 +412,44 @@ explore: looks {
     type: left_outer
     relationship: many_to_one
     sql_on: ${looks.user_id} = ${create_user.id} ;;
+  }
+}
+
+
+explore: projects {
+  view_name: projects
+  group_label: "Looker API"
+  label: "Projects"
+  join: git_branches {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${projects.name} = ${git_branches.project_id} ;;
+  }
+  join: project_files {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${projects.name} = ${project_files.project_id} ;;
+  }
+  join: lookml_models {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${project_files.project_file_key} = ${lookml_models.project_file_key} ;;
+  }
+  join: lookml_models__connections {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${lookml_models.name} = ${lookml_models__connections.model_name} ;;
+    fields: []
+  }
+  join: lookml_models__explores {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${lookml_models.name} = ${lookml_models__explores.model_name} ;;
+  }
+  join: connections {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${lookml_models__connections.connection} = ${connections.name} ;;
   }
 }
 
@@ -593,5 +637,15 @@ explore: users {
     type: left_outer
     relationship: many_to_one
     sql_on: ${users__roles.role_id} = ${roles.id} ;;
+  }
+  join: user_attribute_values {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${users.id} = ${user_attribute_values.user_id} ;;
+  }
+  join: user_attributes {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${user_attribute_values.user_attribute_id} = ${user_attributes.id} ;;
   }
 }
