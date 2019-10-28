@@ -143,7 +143,7 @@ view: folders {
     sql: ${TABLE}.NAME ;;
     link: {
       label: "Drill to Folder Contents"
-      url: "/dashboards/72?Parent%20Folder={{ id._value }}"
+      url: "/dashboards/72?Parent%20Folder={{ value }}"
     }
     link: {
       label: "Open in Looker"
