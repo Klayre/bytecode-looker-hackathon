@@ -114,6 +114,20 @@ view: looks {
     sql: ${TABLE}.FAVORITE_COUNT ;;
   }
 
+  dimension: folder {
+    label: "Folder JSON"
+    type: string
+    sql: ${TABLE}.FOLDER ;;
+    hidden: yes
+  }
+
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${folder}:id ;;
+  }
+
   dimension: google_spreadsheet_formula {
     label: "Google Spreadsheet Formula"
     type: string

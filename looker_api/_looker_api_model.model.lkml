@@ -32,6 +32,7 @@ explore: content_usage {
 
 # Queries Explore
 explore: queries {
+  view_name: queries
   group_label: "Looker API"
   label: "Queries v2"
   join: queries__dynamic_fields {
@@ -76,6 +77,15 @@ explore: queries {
     relationship: one_to_one
     sql_on: ${queries__fields_all.fields_pk} = ${queries__sorts.sorts_pk} ;;
   }
+}
+
+
+# Queries Explore
+explore: queries_content {
+  view_name: queries
+  extends: [queries]
+  group_label: "Looker API"
+  label: "Queries Content"
   join: looks {
     type: left_outer
     relationship: one_to_many
@@ -156,6 +166,73 @@ explore: content_metadata {
 }
 
 
+explore: dashboards {
+  view_name: dashboards
+  extends: [queries]
+  group_label: "Looker API"
+  label: "Dashboards"
+  join: content_metadata {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboards.content_metadata_id} = ${content_metadata.id} ;;
+  }
+  join: content_views {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
+  }
+  join: viewing_users {
+    view_label: "Viewing Users"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_views.user_id} = ${viewing_users.id} ;;
+  }
+  join: folders {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboards.folder_id} = ${folders.id} ;;
+  }
+  join: dashboard_filters {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${dashboards.id} = ${dashboard_filters.dashboard_id} ;;
+  }
+  join: dashboard_layouts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${dashboards.id} = ${dashboard_layouts.dashboard_id} ;;
+  }
+  join: dashboard_layouts_components {
+    type: left_outer
+    relationship: one_to_many
+    sql: , lateral flatten(input => ${dashboard_layouts.dashboard_layout_components}) dlc  ;;
+  }
+  join: dashboard_elements {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${dashboards.id} = ${dashboard_elements.dashboard_id} ;;
+  }
+  join: looks {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.look_id} = ${looks.id} ;;
+  }
+  join: queries {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.query_id} = ${queries.id} ;;
+  }
+  join: create_user {
+    view_label: "Create User"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboards.user_id} = ${create_user.id} ;;
+  }
+}
+
+
 # Explores down to fields - with related lookml_model, project, file, connection info
 explore: explores {
   group_label: "Looker API"
@@ -220,7 +297,26 @@ explore: explores {
 explore: folders {
   group_label: "Looker API"
   label: "Folders"
-  view_label: "  Folders"
+  view_label: " Folders"
+#  Content access needs to be changed to respect folder inheritance
+#   access_filter: {
+#     field: folder_access_user_group.user_id
+#     user_attribute: id
+#   }
+#   join: folder_access {
+#     view_label: "Folder Access"
+#     from: content_metadata_access
+#     type: inner
+#     relationship: one_to_many
+#     sql_on: ${folders.content_metadata_id} = ${folder_access.content_metadata_id} ;;
+#   }
+#   join: folder_access_user_group {
+#     view_label: "Folder Access User Group"
+#     from: users__groups
+#     type: inner
+#     relationship: one_to_many
+#     sql_on: ${folder_access.group_id} = ${folder_access_user_group.group_id} ;;
+#   }
   join: sub_folders {
     view_label: "Sub Folders"
     from: folders
@@ -236,7 +332,7 @@ explore: folders {
     sql_on: ${folders.parent_id} = ${parent_folder.id} ;;
   }
   join: folder_contents {
-    view_label: " Folder Contents"
+    view_label: "Folder Contents"
     from: content_metadata
     type: left_outer
     relationship: one_to_many
@@ -326,6 +422,60 @@ explore: lookml_models {
     sql_on: ${project_files.project_id} = ${projects.name} ;;
   }
 }
+
+
+
+explore: looks {
+  view_name: looks
+  extends: [queries]
+  group_label: "Looker API"
+  label: "Looks"
+  join: content_metadata {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${looks.content_metadata_id} = ${content_metadata.id} ;;
+  }
+  join: content_views {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
+  }
+  join: viewing_users {
+    view_label: "Viewing Users"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_views.user_id} = ${viewing_users.id} ;;
+  }
+  join: folders {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${looks.folder_id} = ${folders.id} ;;
+  }
+  join: dashboard_elements {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${looks.id} = ${dashboard_elements.look_id} ;;
+  }
+  join: dashboards {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: queries {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${looks.query_id} = ${queries.id} ;;
+  }
+  join: create_user {
+    view_label: "Create User"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${looks.user_id} = ${create_user.id} ;;
+  }
+}
+
 
 # Roles and related Sets, Groups, etc.
 explore: roles {

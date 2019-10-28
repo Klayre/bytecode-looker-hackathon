@@ -183,7 +183,7 @@ view: dashboard_filters {
   dimension: row {
     label: "Filter Order"
     type: number
-    sql: ${TABLE}.ROW ;;
+    sql: ${TABLE}."ROW" ;;
   }
 
   dimension: title {

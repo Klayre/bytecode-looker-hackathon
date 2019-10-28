@@ -81,6 +81,20 @@ view: dashboards {
     sql: ${TABLE}.DESCRIPTION ;;
   }
 
+  dimension: folder {
+    label: "Folder JSON"
+    type: string
+    sql: ${TABLE}.FOLDER ;;
+    hidden: yes
+  }
+
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${folder}:id ;;
+  }
+
   dimension: hidden {
     label: "Is Hidden"
     type: yesno
