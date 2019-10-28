@@ -13,6 +13,7 @@ view: views__parameters {
 #                   p.value:description::varchar as description,
 #                   p.value:full_suggestions::varchar as full_suggestions,
 #                   p.value:hidden::varchar as hidden,
+#                   COALESCE(p.value:label::varchar, initcap(replace(p.value:name::varchar, '_', ' '))) as label,
 #                   p.value:label::varchar as label,
 #                   p.value:name::varchar as name,
 #                   p.value:required_access_grants::variant as required_access_grants,
@@ -128,7 +129,7 @@ view: views__parameters {
   dimension: label {
     label: "Label"
     type: string
-    sql: p.value:label::varchar ;;
+    sql: COALESCE(p.value:label::varchar, initcap(replace(p.value:name::varchar, '_', ' '))) ;;
   }
 
   dimension: name {

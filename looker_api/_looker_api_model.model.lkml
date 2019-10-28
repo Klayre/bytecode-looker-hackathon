@@ -1,6 +1,8 @@
 connection: "snowflake_stitch"
 
-include: "*.view.lkml"                       # include all views in this project
+include: "/lookml/*.view"
+include: "/looker_api/*.view"
+include: "/info_schema/*.view"
 
 explore: project_files {}
 
@@ -32,7 +34,7 @@ explore: content_usage {
 # Queries Explore
 explore: queries {
   group_label: "Looker API"
-  label: "Queries"
+  label: "Queries v2"
   join: queries__dynamic_fields {
     type: left_outer
     relationship: one_to_many
@@ -202,7 +204,7 @@ explore: explores {
   join: project_files {
     type: left_outer
     relationship: many_to_one
-    sql_on: ${explores__fields.source_file_path} = ${project_files.path} ;;
+    sql_on: ${explores__fields.source_file_path} = ${project_files.source_file_path} ;;
   }
   join: connections {
     type: left_outer

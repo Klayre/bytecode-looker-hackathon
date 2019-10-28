@@ -10,7 +10,7 @@ view: views__dimension_groups__timeframes {
 #                   dgtf.value::varchar as timeframe
 #           from lookml.views v
 #           , lateral flatten(input => v.dimension_groups) dg
-#           , lateral flatten(input => dg.value:timeframes) dgtg ;;
+#           , lateral flatten(input => dg.value:timeframes) dgtf ;;
 
   dimension: timeframes_pk {
     group_label: "Timeframes"

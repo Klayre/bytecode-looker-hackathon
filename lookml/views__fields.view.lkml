@@ -1,12 +1,13 @@
 view: views__fields {
+  view_label: "Fields"
   derived_table: {
     sql:
-    -- Dimension Groups
+    -- Dimension Groups: Timeframes
     select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
       'dimension_groups' as field_category,
-      dg.value::variant as field,
+      -- dg.value::variant as field,
       NULL::variant as actions,
       dg.value:alias::variant as alias,
       dg.value:allow_fill::varchar as allow_fill,
@@ -31,13 +32,15 @@ view: views__fields {
       dg.value:group_label::varchar as group_label,
       dg.value:hidden::varchar as hidden,
       dg.value:html::varchar as html,
-      dg.value:intervals::variant as intervals,
-      dg.value:label::varchar as label,
+      NULL as interval,
+      CASE WHEN dg.value:label::varchar IS NOT NULL THEN dg.value:label::varchar || ' ' || initcap(dgtf.value::varchar)
+            ELSE initcap(dgtf.value::varchar) END as label,
+      COALESCE(dg.value:label::varchar, initcap(replace(dg.value:name::varchar, '_', ' '))) || ' ' || initcap(dgtf.value::varchar) as label_displayed,
       NULL::varchar as label_from_parameter,
       NULL::variant as links,
       NULL::varchar as map_layer_name,
       NULL::varchar as list_field,
-      dg.value:name::varchar as name,
+      dg.value:name::varchar || '_' || lower(dgtf.value::varchar) as name,
       dg.value:order_by_field::varchar as order_by_field,
       NULL::float as percentile,
       NULL::int as precision,
@@ -59,13 +62,85 @@ view: views__fields {
       NULL::varchar as suggestions,
       dg.value:tags::variant as tags,
       NULL::variant as tiers,
-      dg.value:timeframes::variant as timeframes,
-      dg.value:type::varchar as type,
+      dgtf.value::varchar as timeframe,
+      'date_' || dgtf.value::varchar as "type",
       NULL::varchar as value_format,
       NULL::varchar as value_format_name,
       dg.value:view_label::varchar as view_label
       from lookml.views v
       , lateral flatten(input => v.dimension_groups) dg
+      , lateral flatten(input => dg.value:timeframes) dgtf
+
+      UNION
+
+      -- Dimension Groups: Durations
+      select  v.sha as view_sha,
+      v.path as view_path,
+      v.name as view_name,
+      'dimension_groups' as field_category,
+      -- dg.value::variant as field,
+      NULL::variant as actions,
+      dg.value:alias::variant as alias,
+      dg.value:allow_fill::varchar as allow_fill,
+      NULL::variant as allowed_values,
+      NULL::varchar as alpha_sort,
+      NULL::varchar as approximate,
+      NULL::float as approximate_threshold,
+      dg.value:bypass_suggest_restrictions::varchar as bypass_suggest_restrictions,
+      dg.value:can_filter::varchar as can_filter,
+      NULL::variant as case__whens,
+      NULL::varchar as case_sensitive,
+      dg.value:convert_tz::varchar as convert_tz,
+      dg.value:datatype::varchar as datatype,
+      NULL::varchar as default_value,
+      dg.value:description::varchar as description,
+      NULL::varchar as direction,
+      dg.value:drill_fields::variant as drill_fields,
+      dg.value:fanout_on::varchar as fanout_on,
+      NULL::variant as filters,
+      dg.value:full_suggestions::varchar as full_suggestions,
+      dg.value:group_item_label::varchar as group_item_label,
+      dg.value:group_label::varchar as group_label,
+      dg.value:hidden::varchar as hidden,
+      dg.value:html::varchar as html,
+      dgint.value::varchar as "interval",
+      CASE WHEN dg.value:label::varchar IS NOT NULL THEN dg.value:label::varchar || ' ' || initcap(dgint.value::varchar)
+            ELSE initcap(dgint.value::varchar) END as label,
+      COALESCE(dg.value:label::varchar, initcap(replace(dg.value:name::varchar, '_', ' '))) || ' ' || initcap(dgint.value::varchar) as label_displayed,
+      NULL::varchar as label_from_parameter,
+      NULL::variant as links,
+      NULL::varchar as map_layer_name,
+      NULL::varchar as list_field,
+      dg.value:name::varchar || '_' || lower(dgint.value::varchar) as name,
+      dg.value:order_by_field::varchar as order_by_field,
+      NULL::float as percentile,
+      NULL::int as precision,
+      NULL::varchar as primary_key,
+      dg.value:required_access_grants::variant as required_access_grants,
+      NULL::variant as required_fields,
+      dg.value:skip_drill_filter::varchar as skip_drill_filter,
+      dg.value:sql::varchar as "sql",
+      NULL::varchar as sql_distinct_key,
+      dg.value:sql_end::varchar as sql_end,
+      NULL::varchar as sql_latitude,
+      NULL::varchar as sql_longitude,
+      dg.value:sql_start::varchar as sql_start,
+      NULL::varchar as style,
+      dg.value:suggest_dimension::varchar as suggest_dimension,
+      dg.value:suggest_explore::varchar as suggest_explore,
+      NULL::varchar as suggest_persist_for,
+      dg.value:suggestable::varchar as suggestable,
+      NULL::varchar as suggestions,
+      dg.value:tags::variant as tags,
+      NULL::variant as tiers,
+      NULL as timeframe,
+      'duration_' || dgint.value::varchar as type,
+      NULL::varchar as value_format,
+      NULL::varchar as value_format_name,
+      dg.value:view_label::varchar as view_label
+      from lookml.views v
+      , lateral flatten(input => v.dimension_groups) dg
+      , lateral flatten(input => dg.value:intervals) dgint
 
       UNION
 
@@ -74,7 +149,7 @@ view: views__fields {
       v.path as view_path,
       v.name as view_name,
       'dimensions' as field_category,
-      d.value::variant as field,
+      -- d.value::variant as field,
       d.value:actions::variant as actions,
       d.value:alias::variant as alias,
       NULL as allow_fill,
@@ -99,8 +174,9 @@ view: views__fields {
       d.value:group_label::varchar as group_label,
       d.value:hidden::varchar as hidden,
       d.value:html::varchar as html,
-      NULL as intervals,
+      NULL as interval,
       d.value:label::varchar as label,
+      COALESCE(d.value:label::varchar, initcap(replace(d.value:name::varchar, '_', ' '))) as label_displayed,
       d.value:label_from_parameter::varchar as label_from_parameter,
       d.value:links::variant as links,
       d.value:map_layer_name::varchar as map_layer_name,
@@ -127,8 +203,8 @@ view: views__fields {
       d.value:suggestions::variant as suggestions,
       d.value:tags::variant as tags,
       d.value:tiers::variant as tiers,
-      NULL as timeframes,
-      d.value:type::varchar as type,
+      NULL as timeframe,
+      d.value:type::varchar as "type",
       d.value:value_format::varchar as value_format,
       d.value:value_format_name::varchar as value_format_name,
       d.value:view_label::varchar as view_label
@@ -142,7 +218,7 @@ view: views__fields {
       v.path as view_path,
       v.name as view_name,
       'measures' as field_category,
-      m.value::variant as field,
+      -- m.value::variant as field,
       m.value:actions::variant as actions,
       m.value:alias::variant as alias,
       NULL as allow_fill,
@@ -167,8 +243,9 @@ view: views__fields {
       m.value:group_label::varchar as group_label,
       m.value:hidden::varchar as hidden,
       m.value:html::varchar as html,
-      NULL as intervals,
+      NULL as interval,
       m.value:label::varchar as label,
+      COALESCE(m.value:label::varchar, initcap(replace(m.value:name::varchar, '_', ' '))) as label_displayed,
       m.value:label_from_parameter::varchar as label_from_parameter,
       m.value:links::variant as links,
       NULL as map_layer_name,
@@ -195,8 +272,8 @@ view: views__fields {
       NULL as suggestions,
       m.value:tags::variant as tags,
       NULL as tiers,
-      NULL as timeframes,
-      m.value:type::varchar as type,
+      NULL as timeframe,
+      m.value:type::varchar as "type",
       m.value:value_format::varchar as value_format,
       m.value:value_format_name::varchar as value_format_name,
       m.value:view_label::varchar as view_label
@@ -210,7 +287,7 @@ view: views__fields {
       v.path as view_path,
       v.name as view_name,
       v.filters::variant as fields,
-      f.value::variant as field,
+      -- f.value::variant as field,
       NULL as actions,
       f.value:alias::variant as alias,
       NULL as allow_fill,
@@ -235,8 +312,9 @@ view: views__fields {
       f.value:group_label::varchar as group_label,
       f.value:hidden::varchar as hidden,
       NULL as html,
-      NULL as intervals,
+      NULL as interval,
       f.value:label::varchar as label,
+      COALESCE(f.value:label::varchar, initcap(replace(f.value:name::varchar, '_', ' '))) as label_displayed,
       NULL as label_from_parameter,
       NULL as links,
       NULL as map_layer_name,
@@ -263,7 +341,7 @@ view: views__fields {
       f.value:suggestions::variant as suggestions,
       f.value:tags::variant as tags,
       NULL as tiers,
-      NULL as timeframes,
+      NULL as timeframe,
       f.value:"type"::varchar as "type",
       NULL as value_format,
       NULL as value_format_name,
@@ -278,7 +356,7 @@ view: views__fields {
       v.path as view_path,
       v.name as view_name,
       v.parameters::variant as fields,
-      p.value::variant as field,
+      -- p.value::variant as field,
       NULL as actions,
       p.value:alias::variant as alias,
       NULL as allow_fill,
@@ -303,8 +381,9 @@ view: views__fields {
       NULL as group_label,
       p.value:hidden::varchar as hidden,
       NULL as html,
-      NULL as intervals,
+      NULL as interval,
       p.value:label::varchar as label,
+      COALESCE(p.value:label::varchar, initcap(replace(p.value:name::varchar, '_', ' '))) as label_displayed,
       NULL as label_from_parameter,
       NULL as links,
       NULL as map_layer_name,
@@ -331,7 +410,7 @@ view: views__fields {
       p.value:suggestions::variant as suggestions,
       p.value:tags::variant as tags,
       NULL as tiers,
-      NULL as timeframes,
+      NULL as timeframe,
       p.value:"type"::varchar as "type",
       NULL as value_format,
       NULL as value_format_name,
@@ -339,6 +418,27 @@ view: views__fields {
       from lookml.views v
       , lateral flatten(input => v.parameters) p
        ;;
+  }
+
+  dimension: field_key {
+    label: "Field Key"
+    type: string
+    primary_key: yes
+    sql: ${view_key} || '-' || ${name} ;;
+  }
+
+  dimension: view_field_name {
+    label: "View.Field Name"
+    type: string
+    sql: ${view_name} || '.' || ${name} ;;
+  }
+
+  dimension: view_key {
+    group_label: "View"
+    label: "View Key"
+    type: string
+    hidden: yes
+    sql: ${view_files.git_owner} || '-' || ${view_files.git_repository} || '-' || ${view_name} ;;
   }
 
   dimension: view_sha {
@@ -368,12 +468,12 @@ view: views__fields {
     sql: ${TABLE}.FIELD_CATEGORY ;;
   }
 
-  dimension: field {
-    label: "Field JSON"
-    type: string
-    sql: ${TABLE}.FIELD ;;
-    hidden: yes
-  }
+#   dimension: field {
+#     label: "Field JSON"
+#     type: string
+#     sql: ${TABLE}.FIELD ;;
+#     hidden: yes
+#   }
 
   dimension: actions {
     group_label: "Actions"
@@ -622,25 +722,23 @@ view: views__fields {
     sql: ${TABLE}.HTML ;;
   }
 
-  dimension: intervals {
+  dimension: interval {
     group_label: "Dimension Group Only"
-    label: "Intervals JSON"
+    label: "Interval"
     type: string
-    sql: ${TABLE}.INTERVALS;;
-    hidden: yes
-  }
-
-  dimension: intervals_list {
-    group_label: "Dimension Group Only"
-    label: "Intervals List"
-    type: string
-    sql: array_to_string(parse_json(${intervals}), ', ') ;;
+    sql: ${TABLE}.INTERVAL;;
   }
 
   dimension: label {
     label: "Label"
     type: string
     sql: ${TABLE}.LABEL ;;
+  }
+
+  dimension: label_displayed {
+    label: "Label Displayed"
+    type: string
+    sql: ${TABLE}.LABEL_DISPLAYED ;;
   }
 
   dimension: label_from_parameter {
@@ -875,19 +973,11 @@ view: views__fields {
     sql: array_to_string(parse_json(${tiers}), ', ') ;;
   }
 
-  dimension: timeframes {
+  dimension: timeframe {
     group_label: "Dimension Group Only"
-    label: "Timeframes JSON"
+    label: "Timeframe"
     type: string
-    sql: ${TABLE}.TIMEFRAMES ;;
-    hidden: yes
-  }
-
-  dimension: timeframes_list {
-    group_label: "Dimension Group Only"
-    label: "Timeframes List"
-    type: string
-    sql: array_to_string(parse_json(${timeframes}), ', ') ;;
+    sql: ${TABLE}.TIMEFRAME ;;
   }
 
   dimension: type {
@@ -922,68 +1012,20 @@ view: views__fields {
 
   set: detail {
     fields: [
-      view_sha,
-      view_path,
       view_name,
-      field_category,
-      field,
-      actions,
-      alias,
-      allow_fill,
-      allowed_values,
-      alpha_sort,
-      approximate,
-      approximate_threshold,
-      bypass_suggest_restrictions,
-      can_filter,
-      case__whens,
-      case_sensitive,
-      convert_tz,
-      datatype,
-      default_value,
-      description,
-      direction,
-      drill_fields,
-      fanout_on,
-      filters,
-      full_suggestions,
-      group_item_label,
-      group_label,
-      hidden,
-      html,
-      intervals,
-      label,
-      label_from_parameter,
-      links,
-      map_layer_name,
-      list_field,
+      view_path,
+      view_field_name,
       name,
-      order_by_field,
-      percentile,
-      precision,
-      primary_key,
-      required_access_grants,
-      required_fields,
-      skip_drill_filter,
-      sql,
-      sql_distinct_key,
-      sql_end,
-      sql_latitude,
-      sql_longitude,
-      sql_start,
-      style,
-      suggest_dimension,
-      suggest_explore,
-      suggest_persist_for,
-      suggestable,
-      suggestions,
-      tags,
-      tiers,
-      timeframes,
+      label,
+      group_label,
+      field_category,
       type,
-      value_format,
+      interval,
+      timeframe,
+      tiers,
+      hidden,
       value_format_name,
-      view_label
+      hidden
     ]
   }
 }

@@ -219,6 +219,14 @@ view: looks {
     label: "Short URL"
     type: string
     sql: ${TABLE}.SHORT_URL ;;
+    hidden: yes
+  }
+
+  dimension: short_url_2 {
+    label: "Short URL"
+    type: string
+    sql: '/dashboards/' || ${id} ;;
+    hidden: no
   }
 
   dimension: space {
@@ -246,7 +254,7 @@ view: looks {
     sql: ${TABLE}.TITLE ;;
     link: {
       label: "Open Look"
-      url: "{{ short_url._value }}"
+      url: "{{ short_url_2._value }}"
     }
   }
 

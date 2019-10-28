@@ -307,6 +307,13 @@ from looker.explores ex
     sql: ${TABLE}.MODEL_NAME ;;
   }
 
+  dimension: project_file_key {
+    group_label: "Keys/IDs"
+    label: "Project File Key"
+    type: string
+    sql: ${project_name} || '::' || ${model_name} || '.model';;
+  }
+
   dimension: field {
     label: "Field JSON"
     type: string

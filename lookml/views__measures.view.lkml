@@ -22,7 +22,7 @@ view: views__measures {
 #                   m.value:group_label::varchar as group_label,
 #                   m.value:hidden::varchar as hidden,
 #                   m.value:html::varchar as html,
-#                   m.value:label::varchar as label,
+#                   COALESCE(m.value:label::varchar, initcap(replace(m.value:name::varchar, '_', ' '))) as label,
 #                   m.value:label_from_parameter::varchar as label_from_parameter,
 #                   m.value:links::variant as links,
 #                   m.value:list_field::varchar as list_field,
@@ -201,7 +201,7 @@ view: views__measures {
   dimension: label {
     label: "Label"
     type: string
-    sql: m.value:label::varchar ;;
+    sql: COALESCE(m.value:label::varchar, initcap(replace(m.value:name::varchar, '_', ' '))) ;;
   }
 
   dimension: label_from_parameter {

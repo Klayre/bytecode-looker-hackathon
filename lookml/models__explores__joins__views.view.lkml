@@ -5,12 +5,16 @@ view: models__explores__joins__views {
       A.GIT_OWNER,
       A.GIT_REPOSITORY,
       A.MODEL_PATH,
+      A.MODEL_NAME,
       A.MODEL_KEY,
       A.EXPLORE_NAME,
       A.EXPLORE_KEY,
       A.VIEW_NAME,
+      A.VIEW_FROM,
+      A.VIEW_LABEL,
       A.JOIN_NAME,
       A.JOIN_JSON,
+      A.JOIN_INDEX,
       A.JOIN_VIEW_TYPE,
       COALESCE(B.REQUIRED, FALSE) AS JOIN_REQUIRED
       FROM
@@ -22,16 +26,19 @@ view: models__explores__joins__views {
         models.PATH AS MODEL_PATH,
         SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
         ex.value:name::varchar  AS EXPLORE_NAME,
-        COALESCE((ex.value:from::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar))  AS VIEW_NAME,
+        COALESCE ((ex.value:"from"::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar))  AS VIEW_NAME,
+        ex.value:"from"::varchar AS VIEW_FROM,
+        ex.value:view_label::varchar  AS VIEW_LABEL,
         NULL AS JOIN_NAME,
         NULL AS JOIN_JSON,
         'BASE VIEW' AS JOIN_VIEW_TYPE,
+        -1 AS JOIN_INDEX,
         (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH) AS MODEL_KEY,
         (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar) AS EXPLORE_KEY
       FROM LOOKML.MODEL_FILES  AS model_files
       LEFT JOIN LOOKML.MODELS  AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
       , lateral flatten(input => models.EXPLORES) ex
-      GROUP BY 1,2,3,4,5,6,7,8,9,10
+      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
       UNION
       -- JOINED VIEWS
       SELECT
@@ -40,17 +47,20 @@ view: models__explores__joins__views {
         models.PATH  AS MODEL_PATH,
         SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
         ex.value:name::varchar  AS EXPLORE_NAME,
-        COALESCE((j.value:from::varchar), (j.value:name::varchar))  AS VIEW_NAME,
+        COALESCE((j.value:"from"::varchar), (j.value:name::varchar))  AS VIEW_NAME,
+        j.value:"from"::varchar AS VIEW_FROM,
+        j.value:view_label::varchar AS VIEW_LABEL,
         j.value:name::varchar AS JOIN_NAME,
         j.value::variant AS JOIN_JSON,
         'JOINED VIEW' AS JOIN_VIEW_TYPE,
+        j.index::int as JOIN_INDEX,
         (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH) AS MODEL_KEY,
         (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar) AS EXPLORE_KEY
       FROM LOOKML.MODEL_FILES  AS model_files
       LEFT JOIN LOOKML.MODELS  AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
       , lateral flatten(input => models.EXPLORES) ex
       , lateral flatten(input => ex.value:joins) j
-      GROUP BY 1,2,3,4,5,6,7,8,9,10) A
+      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13) A
       LEFT JOIN
       (
       SELECT
@@ -154,11 +164,11 @@ view: models__explores__joins__views {
     sql: ${git_owner} || '-' || ${git_repository} || '-' || ${view_name} ;;
   }
 
-  dimension: view_name {
-    group_label: "Keys/IDs"
-    label: "View Name"
-    type: string
-    sql: ${TABLE}.VIEW_NAME ;;
+  dimension: join_index {
+    label: "Join Index"
+    type: number
+    value_format_name: id
+    sql: ${TABLE}.JOIN_INDEX + 1 ;;
   }
 
   dimension: join_json {
@@ -309,10 +319,29 @@ view: models__explores__joins__views {
     sql: ${join_json}:type::varchar ;;
   }
 
+  dimension: view_alias_name {
+    label: "View Alias Name"
+    type: string
+    sql: CASE WHEN ${view_from} IS NOT NULL THEN COALESCE(${join_name}, ${explore_name}, ${view_name})
+          ELSE ${view_name} END;;
+  }
+
+  dimension: view_from {
+    label: "View From"
+    type: string
+    sql: ${TABLE}.VIEW_FROM ;;
+  }
+
   dimension: view_label {
     label: "View Label"
     type: string
-    sql: ${join_json}:view_label::varchar ;;
+    sql: ${TABLE}.VIEW_LABEL ;;
+  }
+
+  dimension: view_name {
+    label: "View Name"
+    type: string
+    sql: ${TABLE}.VIEW_NAME ;;
   }
 
   measure: count {

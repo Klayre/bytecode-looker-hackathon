@@ -4,10 +4,25 @@ view: project_files {
   drill_fields: [detail*]
 
   dimension: id {
+    group_label: "Keys/IDs"
     label: "Project File ID"
     primary_key: yes
     type: string
     sql: ${TABLE}.ID ;;
+  }
+
+  dimension: source_file_path {
+    group_label: "Keys/IDs"
+    label: "Source File Path"
+    type: string
+    sql: ${project_id} || '/' || ${path} ;;
+  }
+
+  dimension: project_file_key {
+    group_label: "Keys/IDs"
+    label: "Project File Key"
+    type: string
+    sql: ${project_id} || '::' || ${title} ;;
   }
 
   dimension_group: _sdc_batched {

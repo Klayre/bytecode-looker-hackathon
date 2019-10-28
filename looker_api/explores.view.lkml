@@ -11,6 +11,13 @@ view: explores {
     sql: ${TABLE}.ID ;;
   }
 
+  dimension: project_file_key {
+    group_label: "Keys/IDs"
+    label: "Project File Key"
+    type: string
+    sql: ${project_name} || '::' || ${model_name} || '.model';;
+  }
+
   dimension_group: _sdc_batched {
     type: time
     timeframes: [

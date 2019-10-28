@@ -1,6 +1,7 @@
 connection: "snowflake_stitch"
 
 include: "/lookml/*.view"
+include: "/looker_api/*.view"
 include: "/info_schema/*.view"
 
 datagroup: lookml_default_datagroup {
@@ -15,6 +16,24 @@ explore: models_explores {
   view_name: model_files
   group_label: "LookML"
   label: "Models Explores"
+  join: lookml_models {
+    view_label: "API: LookML Models"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${model_files.model_name} = ${lookml_models.name} ;;
+  }
+  join: project_files {
+    view_label: "API: Project Files"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${model_files.path} = ${project_files.path} ;;
+  }
+  join: projects {
+    view_label: "API: Projects"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${project_files.project_id} = ${projects.name} ;;
+  }
   join: models {
     type: left_outer
     relationship: one_to_one
@@ -117,7 +136,7 @@ explore: models_explores_joins {
   view_name: model_files
   group_label: "LookML"
   label: "Models Explores Joins"
-  extends: [models_explores]
+  extends: [models_explores, views_explore]
   join: models__explores__joins__views {
     type: left_outer
     relationship: one_to_many
@@ -134,20 +153,16 @@ explore: models_explores_joins {
     relationship: one_to_many
     sql_on: ${models__explores__joins__views.join_key} = ${models__explores__joins__required_access_grants.join_key} ;;
   }
-}
-
-
-
-explore: models_explores_joins_views {
-  group_label: "LookML"
-  label: "Models Explores Joins Views"
-  hidden: yes
-  extends: [models_explores]
-  join: models__explores__joins__views {
+  # Views Explore
+  join: views {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${models__explores__joins__views.view_key} = ${views.view_key} ;;
+  }
+  join: view_files {
     type: left_outer
     relationship: many_to_one
-    required_joins: [models, models__explores]
-    sql_on: ${models__explores.explores_pk} = ${models__explores__joins__views.explore_key} ;;
+    sql_on: ${views.view_file_key} = ${view_files.view_file_pk} ;;
   }
 }
 
@@ -162,6 +177,12 @@ explore: views_explore {
     type: left_outer
     relationship: many_to_one
     sql_on: ${view_files.view_file_pk} = ${views.view_file_key} ;;
+  }
+  # ALL Fields (includes Dimensions, Dimension Groups (exploded), Measures, Filters, and Parameters
+  join: views__fields {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${views.view_key} = ${views__fields.view_key} ;;
   }
     # Derived Table joins
     join: views__derived_table__cluster_keys {

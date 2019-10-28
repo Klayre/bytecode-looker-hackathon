@@ -110,6 +110,12 @@ view: lookml_models {
     sql: ${TABLE}.PROJECT_NAME ;;
   }
 
+  dimension: project_file_key {
+    label: "Project File Key"
+    type: string
+    sql: ${project_name} || '::' || ${name} || '.model';;
+  }
+
   dimension: short_url {
     label: "Short URL"
     type: string
