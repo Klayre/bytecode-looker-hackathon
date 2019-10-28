@@ -91,6 +91,7 @@ view: content_views {
 
   dimension_group: last_viewed {
     type: time
+    datatype: timestamp
     timeframes: [
       raw,
       time,
@@ -100,7 +101,7 @@ view: content_views {
       quarter,
       year
     ]
-    sql: ${TABLE}.LAST_VIEWED_AT::DATETIME  ;;
+    sql: TRY_TO_TIMESTAMP(${TABLE}.LAST_VIEWED_AT) ;;
   }
 
   dimension: look_id {
@@ -112,6 +113,7 @@ view: content_views {
 
   dimension_group: start_of_week {
     type: time
+    datatype: timestamp
     timeframes: [
       raw,
       date,
@@ -120,7 +122,7 @@ view: content_views {
       quarter,
       year
     ]
-    sql: ${TABLE}.START_OF_WEEK_DATE::DATETIME  ;;
+    sql: TRY_TO_TIMESTAMP(${TABLE}.START_OF_WEEK_DATE)  ;;
   }
 
   dimension: user_id {
@@ -138,9 +140,22 @@ view: content_views {
   }
 
   measure: count {
-    label: "Number of Content Views"
+    label: "Number of Content View Records"
     type: count
     drill_fields: [detail*]
+    hidden: yes
+  }
+
+  measure: max_last_view {
+    label: "Last Viewed"
+    type: date_time
+    sql: MAX(${last_viewed_time}) ;;
+  }
+
+  measure: min_last_view {
+    label: "First Viewed"
+    type: date_time
+    sql: MIN(${last_viewed_time}) ;;
   }
 
   measure: total_favorites {
@@ -154,6 +169,7 @@ view: content_views {
     type: sum
     sql: ${view_count} ;;
   }
+
 
   set: detail {
     fields: [

@@ -218,6 +218,90 @@ explore: explores {
   }
 }
 
+explore: folders {
+  group_label: "Looker API"
+  label: "Folders"
+  view_label: "  Folders"
+  join: sub_folders {
+    view_label: "Sub Folders"
+    from: folders
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${folders.id} = ${sub_folders.parent_id} ;;
+  }
+  join: parent_folder {
+    view_label: "Parent Folder"
+    from: folders
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${folders.parent_id} = ${parent_folder.id} ;;
+  }
+  join: folder_contents {
+    view_label: " Folder Contents"
+    from: content_metadata
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${folders.content_metadata_id} = ${folder_contents.parent_id} ;;
+  }
+  join: folder_content_views {
+    view_label: "Folder Content Views"
+    from: content_views
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${folder_contents.id} = ${folder_content_views.content_metadata_id} ;;
+  }
+  join: viewing_users {
+    view_label: "Viewing Users"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${folder_content_views.user_id} = ${viewing_users.id} ;;
+  }
+  join: viewing_user_groups {
+    view_label: "Viewing User Groups"
+    from: users__groups
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${viewing_users.id} = ${viewing_user_groups.user_id} ;;
+    fields: []
+  }
+  join: viewing_groups {
+    view_label: "Viewing Groups"
+    from: groups
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${viewing_user_groups.group_id} = ${viewing_groups.id} ;;
+  }
+  join: viewing_user_roles {
+    view_label: "Viewing User Roles"
+    from: users__roles
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${viewing_users.id} = ${viewing_user_roles.user_id} ;;
+    fields: []
+  }
+  join: viewing_roles {
+    view_label: "Viewing Roles"
+    from: roles
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${viewing_user_roles.role_id} = ${viewing_roles.id} ;;
+  }
+  join: folder_dashboards {
+    view_label: "Folder Dashboards"
+    from: dashboards
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${folder_contents.dashboard_id} = ${folder_dashboards.id} ;;
+  }
+  join: folder_looks {
+    view_label: "Folder Looks"
+    from: looks
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${folder_contents.look_id} = ${folder_looks.id} ;;
+  }
+}
 
 explore: lookml_models {
   group_label: "Looker API"
@@ -231,6 +315,16 @@ explore: lookml_models {
     type: left_outer
     relationship: one_to_many
     sql_on: ${lookml_models.name} = ${lookml_models__explores.model_name} ;;
+  }
+  join: project_files {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${lookml_models.project_file_key} = ${project_files.project_file_key} ;;
+  }
+  join: projects {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${project_files.project_id} = ${projects.name} ;;
   }
 }
 
