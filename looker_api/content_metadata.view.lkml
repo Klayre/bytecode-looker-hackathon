@@ -113,6 +113,10 @@ view: content_metadata {
     type: string
     sql: ${TABLE}.NAME ;;
     link: {
+      label: "Drill to Folder Contents"
+      url: "/dashboards/72?Folder={{ folder_id._value }}"
+    }
+    link: {
       label: "Open in Looker"
       url: "{{ short_url._value }}"
     }
