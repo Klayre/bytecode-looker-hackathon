@@ -30,104 +30,6 @@ explore: content_usage {
 }
 
 
-# Queries Explore
-explore: queries {
-  view_name: queries
-  group_label: "Looker API"
-  label: "Queries v2"
-  join: queries__dynamic_fields {
-    type: left_outer
-    relationship: one_to_many
-    sql: , lateral flatten(input => parse_json(${queries.dynamic_fields})) qdf ;;
-  }
-  join: queries__filters {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${queries__filters.query_id} ;;
-  }
-  join: queries__fields_all {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${queries__fields_all.query_id} ;;
-  }
-  join: queries__filter_fields {
-    from: queries__filters
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries__fields_all.query_id} = ${queries__filter_fields.query_id}
-      and ${queries__fields_all.field_name} = ${queries__filter_fields.filter_field} ;;
-  }
-  join: queries__fields_select {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries__fields_all.fields_pk} = ${queries__fields_select.fields_pk} ;;
-  }
-  join: queries__fill_fields {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${queries__fields_all.fields_pk} = ${queries__fill_fields.fills_pk} ;;
-  }
-  join: queries__pivots {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${queries__fields_all.fields_pk} = ${queries__pivots.pivots_pk} ;;
-  }
-  join: queries__sorts {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${queries__fields_all.fields_pk} = ${queries__sorts.sorts_pk} ;;
-  }
-}
-
-
-# Queries Explore
-explore: queries_content {
-  view_name: queries
-  extends: [queries]
-  group_label: "Looker API"
-  label: "Queries Content"
-  join: looks {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${looks.query_id} ;;
-  }
-  join: dashboard_elements {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${dashboard_elements.query_id} ;;
-  }
-  join: dashboards {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${dashboard_elements.dashboard_id} = ${dashboards.id} ;;
-  }
-  join: merge_queries__source_queries {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${merge_queries__source_queries.query_id} ;;
-  }
-  join: merge_queries {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${merge_queries__source_queries.merge_query_id} = ${merge_queries.id} ;;
-  }
-  join: merge_dashboard_elements {
-    from: dashboard_elements
-    view_label: "Merge Dashboard Elements"
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${queries.id} = ${merge_dashboard_elements.query_id} ;;
-  }
-  join: merge_dashboards {
-    from: dashboards
-    view_label: "Merge Dashboards"
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${merge_dashboard_elements.dashboard_id} = ${merge_dashboards.id} ;;
-  }
-}
-
-
 # Explore to show organization of Content
 explore: content_metadata {
   group_label: "Looker API"
@@ -398,6 +300,37 @@ explore: folders {
   }
 }
 
+
+explore: groups {
+  view_name: groups
+  extends: [roles]
+  group_label: "Looker API"
+  label: "Groups"
+  join: users__groups {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${groups.id} = ${users__groups.group_id} ;;
+    fields: []
+  }
+  join: users {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${users__groups.user_id} = ${users.id} ;;
+  }
+  join: role_groups {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${groups.id} = ${role_groups.id} ;;
+    fields: []
+  }
+  join: roles {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${role_groups.role_id} = ${roles.id} ;;
+  }
+}
+
+
 explore: lookml_models {
   group_label: "Looker API"
   label: "LookML Models"
@@ -477,8 +410,108 @@ explore: looks {
 }
 
 
+# Queries Explore
+explore: queries {
+  view_name: queries
+  group_label: "Looker API"
+  label: "Queries v2"
+  join: queries__dynamic_fields {
+    type: left_outer
+    relationship: one_to_many
+    sql: , lateral flatten(input => parse_json(${queries.dynamic_fields})) qdf ;;
+  }
+  join: queries__filters {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${queries__filters.query_id} ;;
+  }
+  join: queries__fields_all {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${queries__fields_all.query_id} ;;
+  }
+  join: queries__filter_fields {
+    from: queries__filters
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields_all.query_id} = ${queries__filter_fields.query_id}
+      and ${queries__fields_all.field_name} = ${queries__filter_fields.filter_field} ;;
+  }
+  join: queries__fields_select {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__fields_select.fields_pk} ;;
+  }
+  join: queries__fill_fields {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__fill_fields.fills_pk} ;;
+  }
+  join: queries__pivots {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__pivots.pivots_pk} ;;
+  }
+  join: queries__sorts {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${queries__fields_all.fields_pk} = ${queries__sorts.sorts_pk} ;;
+  }
+}
+
+
+# Queries Explore
+explore: queries_content {
+  view_name: queries
+  extends: [queries]
+  group_label: "Looker API"
+  label: "Queries Content"
+  join: looks {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${looks.query_id} ;;
+  }
+  join: dashboard_elements {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${dashboard_elements.query_id} ;;
+  }
+  join: dashboards {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: merge_queries__source_queries {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${merge_queries__source_queries.query_id} ;;
+  }
+  join: merge_queries {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${merge_queries__source_queries.merge_query_id} = ${merge_queries.id} ;;
+  }
+  join: merge_dashboard_elements {
+    from: dashboard_elements
+    view_label: "Merge Dashboard Elements"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${merge_dashboard_elements.query_id} ;;
+  }
+  join: merge_dashboards {
+    from: dashboards
+    view_label: "Merge Dashboards"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${merge_dashboard_elements.dashboard_id} = ${merge_dashboards.id} ;;
+  }
+}
+
+
+
 # Roles and related Sets, Groups, etc.
 explore: roles {
+  view_name: roles
   group_label: "Looker API"
   label: "Roles"
   fields: [
@@ -515,6 +548,12 @@ explore: roles {
     relationship: many_to_one
     sql_on: ${permission_sets__permissions.permission} = ${permissions.permission} ;;
   }
+}
+
+
+explore: role_groups {
+  view_name: roles
+  extends: [roles]
   join: role_groups {
     type: left_outer
     relationship: one_to_many
@@ -524,5 +563,35 @@ explore: roles {
     type: left_outer
     relationship: many_to_one
     sql_on: ${role_groups.id} = ${groups.id} ;;
+  }
+}
+
+
+explore: users {
+  view_name: users
+  extends: [roles]
+  group_label: "Looker API"
+  label: "Users"
+  join: users__groups {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${users.id} = ${users__groups.user_id} ;;
+    fields: []
+  }
+  join: groups {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${users__groups.group_id} = ${groups.id} ;;
+  }
+  join: users__roles {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${users.id} = ${users__roles.user_id} ;;
+    fields: []
+  }
+  join: roles {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${users__roles.role_id} = ${roles.id} ;;
   }
 }
