@@ -113,8 +113,8 @@ view: content_metadata {
     type: string
     sql: ${TABLE}.NAME ;;
     link: {
-      label: "Drill to Folder Contents"
-      url: "/dashboards/72?Folder={{ folder_id._value }}"
+      label: "{% if content_type._value == 'space' %}Drill to Folder Contents{% endif %}"
+      url: "/dashboards/@{folders_dashboard_id}?Folder={{ value }}"
     }
     link: {
       label: "Open in Looker"
