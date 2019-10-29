@@ -1,5 +1,7 @@
 connection: "snowflake_stitch"
 
+include: "/lookml/*.view"
+include: "/looker_api/*.view"
 include: "/info_schema/*.view"
 
 datagroup: info_schema_default_datagroup {

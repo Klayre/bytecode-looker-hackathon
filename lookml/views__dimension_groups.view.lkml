@@ -20,7 +20,7 @@ view: views__dimension_groups {
 #                   dg.value:hidden::varchar as hidden,
 #                   dg.value:html::varchar as html,
 #                   dg.value:intervals::variant as intervals,
-#                   dg.value:label::varchar as label,
+#                   COALESCE(dg.value:label::varchar, initcap(replace(dg.value:name::varchar, '_', ' '))) as label,
 #                   dg.value:name::varchar as name,
 #                   dg.value:order_by_field::varchar as order_by_field,
 #                   dg.value:required_access_grants::variant as required_access_grants,
@@ -210,7 +210,7 @@ view: views__dimension_groups {
   dimension: label {
     label: "Label"
     type: string
-    sql: dg.value:label::varchar ;;
+    sql: COALESCE(dg.value:label::varchar, initcap(replace(dg.value:name::varchar, '_', ' '))) ;;
   }
 
   dimension: name {

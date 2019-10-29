@@ -10,6 +10,12 @@ view: models {
     sql: ${git_owner} || '-' || ${git_repository} || '-' || ${path} ;;
   }
 
+  dimension: model_name {
+    label: "Model Name"
+    type: string
+    sql: split_part(split_part(${path}, '.', -3), '/', -1) ;;
+  }
+
   dimension_group: _sdc_batched {
     type: time
     timeframes: [

@@ -2,6 +2,7 @@ view: model_files {
   sql_table_name: LOOKML.MODEL_FILES ;;
   view_label: "Model Files"
 
+  # There may only be one Model in on Model File
   dimension: model_file_pk {
     label: "Model File PK"
     type: string

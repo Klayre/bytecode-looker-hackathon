@@ -1,6 +1,6 @@
 view: table_constraints {
   view_label: "Table Constraints"
-  sql_table_name: INFORMATION_SCHEMA.TABLE_CONSTRAINTS ;;
+  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.TABLE_CONSTRAINTS ;;
 
   dimension: constraint_pk {
     label: "Constraint PK"

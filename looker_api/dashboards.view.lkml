@@ -81,6 +81,20 @@ view: dashboards {
     sql: ${TABLE}.DESCRIPTION ;;
   }
 
+  dimension: folder {
+    label: "Folder JSON"
+    type: string
+    sql: ${TABLE}.FOLDER ;;
+    hidden: yes
+  }
+
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${folder}:id ;;
+  }
+
   dimension: hidden {
     label: "Is Hidden"
     type: yesno
@@ -112,6 +126,12 @@ view: dashboards {
     hidden: yes
   }
 
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/dashboards/' || ${id} ;;
+  }
+
   dimension: space {
     label: "Space JSON"
     type: string
@@ -136,6 +156,10 @@ view: dashboards {
     label: "Dashboard Title"
     type: string
     sql: ${TABLE}.TITLE ;;
+    link: {
+      label: "Open Dashboard"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: user_id {
@@ -145,11 +169,13 @@ view: dashboards {
     sql: ${TABLE}.USER_ID ;;
   }
 
+  # MEASURES
   measure: count {
     label: "Number of Dashboards"
     type: count
     drill_fields: [detail*]
   }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

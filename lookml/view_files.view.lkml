@@ -2,6 +2,7 @@ view: view_files {
   sql_table_name: LOOKML.VIEW_FILES ;;
   view_label: "View Files"
 
+  # There may be multiple Views in one View File
   dimension: view_file_pk {
     label: "View File PK"
     type: string

@@ -1,6 +1,6 @@
 view: tables {
   view_label: "Tables"
-  sql_table_name: INFORMATION_SCHEMA.TABLES ;;
+  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.TABLES ;;
 
   dimension: table_pk {
     label: "Table PK"

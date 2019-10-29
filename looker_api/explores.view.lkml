@@ -11,6 +11,13 @@ view: explores {
     sql: ${TABLE}.ID ;;
   }
 
+  dimension: project_file_key {
+    group_label: "Keys/IDs"
+    label: "Project File Key"
+    type: string
+    sql: ${project_name} || '::' || ${model_name} || '.model';;
+  }
+
   dimension_group: _sdc_batched {
     type: time
     timeframes: [
@@ -92,6 +99,12 @@ view: explores {
     hidden: yes
   }
 
+  dimension: base_view_name {
+    label: "View Name"
+    type: string
+    sql: COALESCE(${view_name}, ${name}) ;;
+  }
+
   dimension: can_explain {
     group_label: "Can"
     label: "Can Explain"
@@ -157,19 +170,19 @@ view: explores {
     hidden: yes
   }
 
-  dimension: fields_list {
-    group_label: "Fields"
-    label: "Fields List"
-    type: string
-    sql: array_to_string(parse_json(${fields}), ', ') ;;
-  }
-
   dimension: files {
     group_label: "Files"
     label: "Files JSON"
     type: string
     sql: ${TABLE}.FILES ;;
     hidden: yes
+  }
+
+  dimension: files_list {
+    group_label: "Files"
+    label: "Files List"
+    type: string
+    sql: array_to_string(parse_json(${files}), ', ') ;;
   }
 
   dimension: group_label {
@@ -299,6 +312,12 @@ view: explores {
     label: "Tags List"
     type: string
     sql: array_to_string(parse_json(${tags}), ', ') ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/explore/' || ${model_name} || '/' || ${name} ;;
   }
 
   dimension: view_name {

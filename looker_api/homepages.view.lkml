@@ -110,10 +110,20 @@ view: homepages {
     hidden: yes
   }
 
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/browse/boards/' || ${id} ;;
+  }
+
   dimension: title {
     label: "Homepage Title"
     type: string
     sql: ${TABLE}.TITLE ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension_group: updated {

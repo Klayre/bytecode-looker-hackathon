@@ -1,11 +1,14 @@
 view: spaces {
+  view_label: "Spaces"
   sql_table_name: LOOKER.SPACES ;;
-  drill_fields: [id]
+  drill_fields: [detail*]
 
   dimension: id {
+    group_label: "Keys/IDs"
+    label: "Space ID"
     primary_key: yes
     type: string
-    sql: ${TABLE}."ID" ;;
+    sql: ${TABLE}.ID ;;
   }
 
   dimension_group: _sdc_batched {
@@ -19,7 +22,8 @@ view: spaces {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -33,7 +37,8 @@ view: spaces {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -47,73 +52,99 @@ view: spaces {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
   dimension: child_count {
+    label: "Child Count"
     type: number
-    sql: ${TABLE}."CHILD_COUNT" ;;
+    sql: ${TABLE}.CHILD_COUNT ;;
   }
 
   dimension: content_metadata_id {
+    group_label: "Keys/IDs"
+    label: "Content Metadata ID"
     type: string
-    # hidden: yes
-    sql: ${TABLE}."CONTENT_METADATA_ID" ;;
+    sql: ${TABLE}.CONTENT_METADATA_ID ;;
   }
 
   dimension: creator_id {
+    group_label: "Keys/IDs"
+    label: "Creator ID"
     type: string
-    sql: ${TABLE}."CREATOR_ID" ;;
+    sql: ${TABLE}.CREATOR_ID ;;
   }
 
   dimension: is_embed {
+    group_label: "Indicators"
+    label: "Is Embed"
     type: yesno
-    sql: ${TABLE}."IS_EMBED" ;;
+    sql: ${TABLE}.IS_EMBED ;;
   }
 
   dimension: is_embed_shared_root {
+    group_label: "Indicators"
+    label: "Is Embed Shared Root"
     type: yesno
-    sql: ${TABLE}."IS_EMBED_SHARED_ROOT" ;;
+    sql: ${TABLE}.IS_EMBED_SHARED_ROOT ;;
   }
 
   dimension: is_embed_users_root {
+    group_label: "Indicators"
+    label: "Is Embed Users Root"
     type: yesno
-    sql: ${TABLE}."IS_EMBED_USERS_ROOT" ;;
+    sql: ${TABLE}.IS_EMBED_USERS_ROOT ;;
   }
 
   dimension: is_personal {
+    group_label: "Indicators"
+    label: "Is Personal"
     type: yesno
-    sql: ${TABLE}."IS_PERSONAL" ;;
+    sql: ${TABLE}.IS_PERSONAL ;;
   }
 
   dimension: is_personal_descendant {
+    group_label: "Indicators"
+    label: "Is Personal Descendant"
     type: yesno
-    sql: ${TABLE}."IS_PERSONAL_DESCENDANT" ;;
+    sql: ${TABLE}.IS_PERSONAL_DESCENDANT ;;
   }
 
   dimension: is_shared_root {
+    group_label: "Indicators"
+    label: "Is Shared Root"
     type: yesno
-    sql: ${TABLE}."IS_SHARED_ROOT" ;;
+    sql: ${TABLE}.IS_SHARED_ROOT ;;
   }
 
   dimension: is_users_root {
+    group_label: "Indicators"
+    label: "Is Users Root"
     type: yesno
-    sql: ${TABLE}."IS_USERS_ROOT" ;;
+    sql: ${TABLE}.IS_USERS_ROOT ;;
   }
 
   dimension: name {
+    label: "Space Name"
     type: string
-    sql: ${TABLE}."NAME" ;;
+    sql: ${TABLE}.NAME ;;
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: name_button {
@@ -122,8 +153,22 @@ view: spaces {
   }
 
   dimension: parent_id {
+    group_label: "Keys/IDs"
+    label: "Parent Space ID"
     type: string
     sql: ${TABLE}."PARENT_ID" ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/spaces/' || ${id} ;;
+  }
+
+  measure: count {
+    label: "Number of Spaces"
+    type: count
+    drill_fields: [detail*]
   }
 
   measure: number_of_children {
@@ -131,21 +176,14 @@ view: spaces {
     sql: ${child_count} ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
-
 
   # ----- Sets of fields for drilling ------
+
   set: detail {
     fields: [
       id,
       name,
-      content_metadata.id,
-      content_metadata.name,
-      content_metadata.count,
-      looks.count
+      parent.name
     ]
   }
 }

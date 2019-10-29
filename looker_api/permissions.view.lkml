@@ -1,5 +1,14 @@
 view: permissions {
+  view_label: "Permission Sets"
   sql_table_name: LOOKER.PERMISSIONS ;;
+
+  dimension: permission {
+    group_label: "Permissions"
+    label: "Permission"
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.PERMISSION ;;
+  }
 
   dimension_group: _sdc_batched {
     type: time
@@ -12,7 +21,8 @@ view: permissions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -26,7 +36,8 @@ view: permissions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -40,36 +51,39 @@ view: permissions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
   dimension: description {
+    group_label: "Permissions"
+    label: "Permission Description"
     type: string
-    sql: ${TABLE}."DESCRIPTION" ;;
+    sql: ${TABLE}.DESCRIPTION ;;
   }
 
   dimension: parent {
+    group_label: "Permissions"
+    label: "Parent"
     type: string
-    sql: ${TABLE}."PARENT" ;;
-  }
-
-  dimension: permission {
-    type: string
-    sql: ${TABLE}."PERMISSION" ;;
+    sql: ${TABLE}.PARENT ;;
   }
 
   measure: count {
+    label: "Number of Permissions"
     type: count
-    drill_fields: []
+    drill_fields: [permission, description]
   }
 }

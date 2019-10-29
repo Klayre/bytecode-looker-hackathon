@@ -1,7 +1,7 @@
 
 view: databases {
   view_label: "Databases"
-  sql_table_name: INFORMATION_SCHEMA.DATABASES ;;
+  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.DATABASES ;;
 
   dimension: database_name {
     label: "Database Name"

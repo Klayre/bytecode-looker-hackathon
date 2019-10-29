@@ -1,6 +1,7 @@
 connection: "snowflake_stitch"
 
 include: "/lookml/*.view"
+include: "/looker_api/*.view"
 include: "/info_schema/*.view"
 
 datagroup: lookml_default_datagroup {
@@ -15,11 +16,28 @@ explore: models_explores {
   view_name: model_files
   group_label: "LookML"
   label: "Models Explores"
+  join: lookml_models {
+    view_label: "API: LookML Models"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${model_files.model_name} = ${lookml_models.name} ;;
+  }
+  join: project_files {
+    view_label: "API: Project Files"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${model_files.path} = ${project_files.path} ;;
+  }
+  join: projects {
+    view_label: "API: Projects"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${project_files.project_id} = ${projects.name} ;;
+  }
   join: models {
     type: left_outer
     relationship: one_to_one
-    sql:, ${models.SQL_TABLE_NAME} ;;
-    sql_where: ${model_files.model_file_pk} = ${models.model_pk}  ;;
+    sql_on: ${model_files.model_file_pk} = ${models.model_pk}  ;;
   }
   # Model level joins
   join: models__access_grants {
@@ -38,81 +56,77 @@ explore: models_explores {
   join: models__explores {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ${models.explores}) ex ;;
-    required_joins: [models]
+    sql_on: ${model_files.model_file_pk} = ${models__explores.model_key}  ;;
   }
   # Explore level joins
   join: models__explores__access_filters {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:access_filters) af ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__always_filters {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:always_filter:filters) aff ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__always_joins {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:always_join) aj ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__cancel_grouping_fields {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:cancel_grouping_fields) cgf ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__conditionally_filters {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:conditionally_filter:filters) cff ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__conditionally_filters_unless {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:conditionally_filter:unless) cfu ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__extends {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:extends) ext ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__fields {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:fields) f ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__explores__required_access_grants {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ex.value:required_access_grants) rag ;;
-    required_joins: [models, models__explores]
+    required_joins: [models__explores]
   }
   join: models__includes {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ${models.includes}) inc ;;
-    required_joins: [models]
   }
   join: models__map_layers {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ${models.map_layers}) ml ;;
-    required_joins: [models]
   }
   join: models__named_value_formats {
     type: left_outer
     relationship: one_to_many
     sql: , lateral flatten(input => ${models.named_value_formats}) nvf ;;
-    required_joins: [models]
   }
 }
 
@@ -122,46 +136,33 @@ explore: models_explores_joins {
   view_name: model_files
   group_label: "LookML"
   label: "Models Explores Joins"
-  extends: [models_explores]
-  join: models__explores__joins {
+  extends: [models_explores, views_explore]
+  join: models__explores__joins__views {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => ex.value:joins) j ;;
-    required_joins: [models, models__explores]
+    sql_on: ${models__explores.explore_id} = ${models__explores__joins__views.explore_id} ;;
   }
   # Join level joins
   join: models__explores__joins__fields {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => j.value:fields) jf ;;
-    required_joins: [models, models__explores, models__explores__joins]
+    sql_on: ${models__explores__joins__views.join_key} = ${models__explores__joins__fields.join_key};;
   }
   join: models__explores__joins__required_access_grants {
     type: left_outer
     relationship: one_to_many
-    sql: , lateral flatten(input => j.value:required_access_grants) jrag ;;
-    required_joins: [models, models__explores, models__explores__joins]
+    sql_on: ${models__explores__joins__views.join_key} = ${models__explores__joins__required_access_grants.join_key} ;;
   }
-  join: models__explores__joins__required_joins {
+  # Views Explore
+  join: views {
     type: left_outer
-    relationship: one_to_many
-    sql: , lateral flatten(input => j.value:required_joins) jrj ;;
-    required_joins: [models, models__explores, models__explores__joins]
+    relationship: one_to_one
+    sql_on: ${models__explores__joins__views.view_key} = ${views.view_key} ;;
   }
-}
-
-
-
-explore: models_explores_joins_views {
-  group_label: "LookML"
-  label: "Models Explores Joins Views"
-  hidden: yes
-  extends: [models_explores]
-  join: models__explores__joins__views {
+  join: view_files {
     type: left_outer
     relationship: many_to_one
-    required_joins: [models, models__explores]
-    sql_on: ${models__explores.explores_pk} = ${models__explores__joins__views.explore_key} ;;
+    sql_on: ${views.view_file_key} = ${view_files.view_file_pk} ;;
   }
 }
 
@@ -176,6 +177,12 @@ explore: views_explore {
     type: left_outer
     relationship: many_to_one
     sql_on: ${view_files.view_file_pk} = ${views.view_file_key} ;;
+  }
+  # ALL Fields (includes Dimensions, Dimension Groups (exploded), Measures, Filters, and Parameters
+  join: views__fields {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${views.view_key} = ${views__fields.view_key} ;;
   }
     # Derived Table joins
     join: views__derived_table__cluster_keys {

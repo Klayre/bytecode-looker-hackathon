@@ -1,4 +1,5 @@
 view: versions {
+  view_label: "Versions"
   sql_table_name: LOOKER.VERSIONS ;;
 
   dimension_group: _sdc_batched {
@@ -12,7 +13,8 @@ view: versions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_BATCHED_AT" ;;
+    sql: ${TABLE}._SDC_BATCHED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -26,7 +28,8 @@ view: versions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_EXTRACTED_AT" ;;
+    sql: ${TABLE}._SDC_EXTRACTED_AT ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -40,36 +43,39 @@ view: versions {
       quarter,
       year
     ]
-    sql: ${TABLE}."_SDC_RECEIVED_AT" ;;
+    sql: ${TABLE}._SDC_RECEIVED_AT ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
-    sql: ${TABLE}."_SDC_SEQUENCE" ;;
+    sql: ${TABLE}._SDC_SEQUENCE ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
-    sql: ${TABLE}."_SDC_TABLE_VERSION" ;;
+    sql: ${TABLE}._SDC_TABLE_VERSION ;;
+    hidden: yes
   }
 
   dimension: current_version {
+    label: "Current Version"
     type: string
-    sql: ${TABLE}."CURRENT_VERSION" ;;
+    sql: ${TABLE}.CURRENT_VERSION ;;
   }
 
   dimension: looker_release_version {
+    label: "Looker Release Version"
     type: string
-    sql: ${TABLE}."LOOKER_RELEASE_VERSION" ;;
+    sql: ${TABLE}.LOOKER_RELEASE_VERSION ;;
   }
 
   dimension: supported_versions {
+    label: "Supported Versions JSON"
     type: string
-    sql: ${TABLE}."SUPPORTED_VERSIONS" ;;
+    sql: ${TABLE}.SUPPORTED_VERSIONS ;;
+    hidden: yes
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }

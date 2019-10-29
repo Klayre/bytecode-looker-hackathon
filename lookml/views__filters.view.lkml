@@ -16,7 +16,7 @@ view: views__filters {
 #                   f.value:group_item_label::varchar as group_item_label,
 #                   f.value:group_label::varchar as group_label,
 #                   f.value:hidden::varchar as hidden,
-#                   f.value:label::varchar as label,
+#                   COALESCE(f.value:label::varchar, initcap(replace(f.value:name::varchar, '_', ' '))) as label,
 #                   f.value:name::varchar as name,
 #                   f.value:required_access_grants::variant as required_access_grants,
 #                   f.value:required_fields::variant as required_fields,
@@ -155,7 +155,7 @@ view: views__filters {
   dimension: label {
     label: "Label"
     type: string
-    sql: f.value:label::varchar ;;
+    sql: COALESCE(f.value:label::varchar, initcap(replace(f.value:name::varchar, '_', ' '))) ;;
   }
 
   dimension: name {

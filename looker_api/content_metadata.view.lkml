@@ -81,6 +81,13 @@ view: content_metadata {
     sql: ${TABLE}.DASHBOARD_ID ;;
   }
 
+  dimension: folder_id {
+    group_label: "Keys/IDs"
+    label: "Folder ID"
+    type: string
+    sql: ${TABLE}.FOLDER_ID ;;
+  }
+
   dimension: inheriting_id {
     group_label: "Keys/IDs"
     label: "Inheriting ID"
@@ -105,6 +112,14 @@ view: content_metadata {
     label: "Content Name"
     type: string
     sql: ${TABLE}.NAME ;;
+    link: {
+      label: "{% if content_type._value == 'space' %}Drill to Folder Contents{% endif %}"
+      url: "/dashboards/@{folders_dashboard_id}?Folder={{ value }}"
+    }
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: parent_id {
@@ -112,6 +127,16 @@ view: content_metadata {
     label: "Parent ID"
     type: string
     sql: ${TABLE}.PARENT_ID ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: CASE WHEN ${content_type} = 'dashboard' THEN '/dashboards/' || ${dashboard_id}
+              WHEN ${content_type} = 'look' THEN '/looks/' || ${look_id}
+              WHEN ${content_type} = 'space' THEN '/spaces/' || ${space_id}
+              WHEN ${content_type} = 'folder' THEN '/folders/' || ${folder_id}
+              ELSE NULL END ;;
   }
 
   dimension: slug {
@@ -125,7 +150,6 @@ view: content_metadata {
     group_label: "Keys/IDs"
     label: "Space ID"
     type: string
-    # hidden: yes
     sql: ${TABLE}.SPACE_ID ;;
   }
 

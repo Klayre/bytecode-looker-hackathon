@@ -22,7 +22,7 @@ view: views__dimensions {
 #                   d.value:group_label::varchar as group_label,
 #                   d.value:hidden::varchar as hidden,
 #                   d.value:html::varchar as html,
-#                   d.value:label::varchar as label,
+#                   COALESCE(d.value:label::varchar, initcap(replace(d.value:name::varchar, '_', ' '))) as label,
 #                   d.value:label_from_parameter::varchar as label_from_parameter,
 #                   d.value:links::variant as links,
 #                   d.value:map_layer_name::varchar as map_layer_name,
@@ -245,7 +245,7 @@ view: views__dimensions {
   dimension: label {
     label: "Label"
     type: string
-    sql: d.value:label::varchar ;;
+    sql: COALESCE(d.value:label::varchar, initcap(replace(d.value:name::varchar, '_', ' '))) ;;
   }
 
   dimension: label_from_parameter {

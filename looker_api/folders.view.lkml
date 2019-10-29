@@ -141,6 +141,14 @@ view: folders {
     label: "Folder Name"
     type: string
     sql: ${TABLE}.NAME ;;
+    link: {
+      label: "Drill to Folder Contents"
+      url: "/dashboards/@{folders_dashboard_id}?Folder={{ value }}"
+    }
+    link: {
+      label: "Open in Looker"
+      url: "{{ short_url._value }}"
+    }
   }
 
   dimension: parent_id {
@@ -148,6 +156,12 @@ view: folders {
     label: "Parent Folder ID"
     type: string
     sql: ${TABLE}.PARENT_ID ;;
+  }
+
+  dimension: short_url {
+    label: "Short URL"
+    type: string
+    sql: '/folders/' || ${id} ;;
   }
 
   measure: count {
