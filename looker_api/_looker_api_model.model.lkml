@@ -552,6 +552,44 @@ explore: queries_content {
 }
 
 
+# Queries Explore
+explore: query_history {
+  view_name: query_history
+  extends: [queries]
+  group_label: "Looker API"
+  label: "Query History"
+  join: queries {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.query_id} = ${queries.id} ;;
+  }
+  join: users {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.user_id} = ${users.id} ;;
+  }
+  join: dashboards {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: folders {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.space_id} = ${folders.id} ;;
+  }
+  join: looks {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.look_id} = ${looks.query_id} ;;
+  }
+  join: spaces {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.space_id} = ${spaces.id} ;;
+  }
+}
+
 
 # Roles and related Sets, Groups, etc.
 explore: roles {
