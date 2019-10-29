@@ -116,15 +116,26 @@ view: spaces {
     sql: ${TABLE}."NAME" ;;
   }
 
+  dimension: name_button {
+      sql: ${name} ;;
+      html: <a href="?Parent%20Space={{ spaces.id._value }}"><button style="width:200px;height:40px;font-size:16px;font-weight:bold;">{{rendered_value}}</button></a> ;;
+  }
+
   dimension: parent_id {
     type: string
     sql: ${TABLE}."PARENT_ID" ;;
+  }
+
+  measure: number_of_children {
+    type: sum
+    sql: ${child_count} ;;
   }
 
   measure: count {
     type: count
     drill_fields: [detail*]
   }
+
 
   # ----- Sets of fields for drilling ------
   set: detail {

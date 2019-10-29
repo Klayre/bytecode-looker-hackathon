@@ -24,3 +24,4 @@ explore: content_usage {
     sql_where: ${content_usage.id} = ${looks.query_id} ;;
   }
 }
+explore: spaces {}
