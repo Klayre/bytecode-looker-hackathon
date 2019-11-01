@@ -1,6 +1,6 @@
 view: schemata {
   label: "Schemas"
-  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.SCHEMATA ;;
+  sql_table_name: @{info_schema_db}.INFORMATION_SCHEMA.SCHEMATA ;;
 
   dimension: catalog_schema_name {
     label: "Catalog.Schema Name"

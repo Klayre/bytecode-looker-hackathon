@@ -11,6 +11,34 @@ datagroup: lookml_default_datagroup {
 
 persist_with: lookml_default_datagroup
 
+explore: columns {
+  group_label: "LookML"
+  label: "DB Columns to LookML Fields"
+  view_label: " DB Columns"
+  join: tables {
+    view_label: " DB Tables"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${columns.table_key} = ${tables.table_pk} ;;
+  }
+  join: views__fields {
+    type: left_outer
+    relationship: one_to_many
+    sql: ${columns.table_column_name} = ${views__fields.table_column_name}
+          AND ${columns.table_schema} = ${views__fields.db_schema_name} ;;
+  }
+  join: views {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${views__fields.view_key} = ${views.view_key} ;;
+  }
+  join: view_files {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${views.view_file_key} = ${view_files.view_file_pk} ;;
+  }
+
+}
 
 explore: models_explores {
   view_name: model_files

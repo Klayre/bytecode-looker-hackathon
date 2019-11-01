@@ -1,7 +1,7 @@
 
 view: columns {
   view_label: "Columns"
-  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.COLUMNS ;;
+  sql_table_name: @{info_schema_db}.INFORMATION_SCHEMA.COLUMNS ;;
 
 
   dimension: column_pk {
