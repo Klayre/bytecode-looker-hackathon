@@ -322,92 +322,110 @@ from looker.explores ex
   }
 
   dimension: align {
+    label: "Align"
     type: string
     sql: ${TABLE}.ALIGN ;;
   }
 
   dimension: can_filter {
+    label: "Can Filter"
     type: yesno
     sql: ${TABLE}.CAN_FILTER ;;
   }
 
   dimension: can_time_filter {
+    label: "Can Time Filter"
     type: yesno
     sql: ${TABLE}.CAN_TIME_FILTER ;;
   }
 
   dimension: category {
+    label: "Fiedl Category"
     type: string
     sql: ${TABLE}.CATEGORY ;;
   }
 
   dimension: default_filter_value {
+    label: "Default Filter Value"
     type: string
     sql: ${TABLE}.DEFAULT_FILTER_VALUE ;;
   }
 
   dimension: description {
+    label: "Field Description"
     type: string
     sql: ${TABLE}.DESCRIPTION ;;
   }
 
   dimension: dynamic {
+    label: "Is Dynamic"
     type: yesno
     sql: ${TABLE}.DYNAMIC ;;
   }
 
   dimension: enumerations {
+    label: "Enumerations JSON"
     type: string
     sql: ${TABLE}.ENUMERATIONS ;;
     hidden: yes
   }
 
   dimension: field_group_label {
+    label: "Fiedl Group Label"
     type: string
     sql: ${TABLE}.FIELD_GROUP_LABEL ;;
   }
 
   dimension: field_group_variant {
+    label: "Field Group Variant"
     type: string
     sql: ${TABLE}.FIELD_GROUP_VARIANT ;;
   }
 
   dimension: fill_style {
+    label: "Field Style"
     type: string
     sql: ${TABLE}.FILL_STYLE ;;
   }
 
   dimension: fical_month_offset {
+    label: "Fiscal Month Offset"
     type: number
     sql: ${TABLE}.FICAL_MONTH_OFFSET ;;
   }
 
   dimension: has_allowed_values {
+    label: "Has Allowed Values"
     type: yesno
     sql: ${TABLE}.HAS_ALLOWED_VALUES ;;
   }
 
   dimension: hidden {
+    label: "Hidden"
     type: yesno
     sql: ${TABLE}.HIDDEN ;;
   }
 
   dimension: is_filter {
+    label: "Is Filter"
     type: yesno
     sql: ${TABLE}.IS_FILTER ;;
   }
 
   dimension: is_fiscal {
+    label: "Is Fiscal"
     type: yesno
     sql: ${TABLE}.IS_FISCAL ;;
   }
 
   dimension: is_numeric {
+    label: "Is Numerica"
     type: yesno
     sql: ${TABLE}.IS_NUMERIC ;;
   }
 
   dimension: is_timeframe {
+    label: "Is Timeframe"
     type: yesno
     sql: ${TABLE}.IS_TIMEFRAME ;;
   }
@@ -419,6 +437,7 @@ from looker.explores ex
   }
 
   dimension: label_from_parameter {
+    label: "Label from Parameter"
     type: string
     sql: ${TABLE}.LABEL_FROM_PARAMETER ;;
   }
@@ -430,61 +449,70 @@ from looker.explores ex
   }
 
   dimension: lookml_link {
+    label: "LookML Link"
     type: string
     sql: ${TABLE}.LOOKML_LINK ;;
   }
 
   dimension: map_layer__extents_json_url {
     group_label: "Map Layer"
-    label: "Map Layer Extents JSON URL"
+    label: "Extents JSON URL"
     type: string
     sql: ${TABLE}.MAP_LAYER__EXTENTS_JSON_URL ;;
   }
 
   dimension: map_layer__feature_key {
     group_label: "Map Layer"
+    label: "Feature Key"
     type: string
     sql: ${TABLE}.MAP_LAYER__FEATURE_KEY ;;
   }
 
   dimension: map_layer__format {
     group_label: "Map Layer"
+    label: "Format"
     type: string
     sql: ${TABLE}.MAP_LAYER__FORMAT ;;
   }
 
   dimension: map_layer__max_zoom_level {
     group_label: "Map Layer"
+    label: "Max Zoom Level"
     type: number
     sql: ${TABLE}.MAP_LAYER__MAX_ZOOM_LEVEL ;;
   }
 
   dimension: map_layer__min_zoom_level {
     group_label: "Map Layer"
+    label: "Min Zoom Level"
     type: number
     sql: ${TABLE}.MAP_LAYER__MIN_ZOOM_LEVEL ;;
   }
 
   dimension: map_layer__name {
     group_label: "Map Layer"
+    label: "Map Layer Name"
     type: string
     sql: ${TABLE}.MAP_LAYER__NAME ;;
   }
 
   dimension: map_layer__projection {
     group_label: "Map Layer"
+    label: "Projection"
     type: string
     sql: ${TABLE}.MAP_LAYER__PROJECTION ;;
   }
 
   dimension: map_layer__projection_key {
     group_label: "Map Layer"
+    label: "Projection Key"
     type: string
     sql: ${TABLE}.MAP_LAYER__PROJECTION_KEY ;;
   }
 
   dimension: map_layer__projection_label_key {
     group_label: "Map Layer"
+    label: "Label Key"
     type: string
     sql: ${TABLE}.MAP_LAYER__PROJECTION_LABEL_KEY ;;
   }
@@ -497,6 +525,7 @@ from looker.explores ex
   }
 
   dimension: measure {
+    label: "Is Measure"
     type: yesno
     sql: ${TABLE}.MEASURE ;;
   }
@@ -508,46 +537,55 @@ from looker.explores ex
   }
 
   dimension: parameter {
+    label: "Is Parameter"
     type: yesno
     sql: ${TABLE}.PARAMETER ;;
   }
 
   dimension: permanent {
+    label: "Is Permanent"
     type: yesno
     sql: ${TABLE}.PERMANENT ;;
   }
 
   dimension: primary_key {
+    label: "Is Primary Key"
     type: yesno
     sql: ${TABLE}.PRIMARY_KEY ;;
   }
 
   dimension: project_name {
+    label: "Project Name"
     type: string
     sql: ${TABLE}.PROJECT_NAME ;;
   }
 
   dimension: requires_refresh_on_sort {
+    label: "Requires Refresh on Sort"
     type: yesno
     sql: ${TABLE}.REQUIRES_REFRESH_ON_SORT ;;
   }
 
   dimension: scope {
+    label: "Scope"
     type: string
     sql: ${TABLE}.SCOPE ;;
   }
 
   dimension: sortable {
+    label: "Is Sortable"
     type: yesno
     sql: ${TABLE}.SORTABLE ;;
   }
 
   dimension: source_file {
+    label: "Source File"
     type: string
     sql: ${TABLE}.SOURCE_FILE ;;
   }
 
   dimension: source_file_path {
+    label: "Source File Path"
     type: string
     sql: ${TABLE}.SOURCE_FILE_PATH ;;
   }
@@ -566,26 +604,34 @@ from looker.explores ex
   }
 
   dimension: strict_value_format {
+    label: "Strict Value Format"
     type: yesno
     sql: ${TABLE}.STRICT_VALUE_FORMAT ;;
   }
 
   dimension: suggest_dimension {
+    group_label: "Suggest"
+    label: "Suggest Dimension"
     type: string
     sql: ${TABLE}.SUGGEST_DIMENSION ;;
   }
 
   dimension: suggest_explore {
+    group_label: "Suggest"
+    label: "Suggest Explore"
     type: string
     sql: ${TABLE}.SUGGEST_EXPLORE ;;
   }
 
   dimension: suggestable {
+    group_label: "Suggest"
+    label: "Is Suggestable"
     type: yesno
     sql: ${TABLE}.SUGGESTABLE ;;
   }
 
   dimension: suggestions {
+    group_label: "Suggest"
     label: "Suggestions JSON"
     type: string
     sql: ${TABLE}.SUGGESTIONS ;;
@@ -593,12 +639,14 @@ from looker.explores ex
   }
 
   dimension: suggestions_list {
+    group_label: "Suggest"
     label: "Suggestions List"
     type: string
     sql: array_to_string(parse_json(${suggestions}), ', ') ;;
   }
 
   dimension: tags {
+    group_label: "Tags"
     label: "Tags JSON"
     type: string
     sql: ${TABLE}.TAGS ;;
@@ -606,22 +654,26 @@ from looker.explores ex
   }
 
   dimension: tags_list {
+    group_label: "Tags"
     label: "Tags List"
     type: string
     sql: array_to_string(parse_json(${tags}), ', ') ;;
   }
 
   dimension: time_interval__count {
+    label: "Time Interval Count"
     type: string
     sql: ${TABLE}.TIME_INTERVAL__COUNT ;;
   }
 
   dimension: time_interval__name {
+    label: "Time Interval Name"
     type: string
     sql: ${TABLE}.TIME_INTERVAL__NAME ;;
   }
 
   dimension: type {
+    label: "Field Type"
     type: string
     sql: ${TABLE}."type" ;;
   }
@@ -640,26 +692,37 @@ from looker.explores ex
   }
 
   dimension: value_format {
+    label: "Value Format"
     type: string
     sql: ${TABLE}.VALUE_FORMAT ;;
   }
 
+  dimension: view_field_name {
+    label: "View.Field Name"
+    type: string
+    sql: ${view_name} || '.' || ${name} ;;
+  }
+
   dimension: view_name {
+    label: "View Name"
     type: string
     sql: ${TABLE}.view_name ;;
   }
 
   dimension: view_label {
+    label: "View Label"
     type: string
     sql: ${TABLE}.VIEW_LABEL ;;
   }
 
   dimension: week_start_day {
+    label: "Week Start Day"
     type: string
     sql: ${TABLE}.WEEK_START_DAY ;;
   }
 
   measure: count {
+    label: "Number of Fields"
     type: count
     drill_fields: [detail*]
   }

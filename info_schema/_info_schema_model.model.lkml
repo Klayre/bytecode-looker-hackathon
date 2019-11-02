@@ -18,11 +18,6 @@ explore: columns {
     relationship: many_to_one
     sql_on: ${columns.table_key} = ${tables.table_pk} ;;
   }
-  join: table_constraints {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${tables.table_pk} = ${table_constraints.table_key} ;;
-  }
   join: schemata {
     type: left_outer
     relationship: many_to_one
@@ -38,11 +33,6 @@ explore: columns {
 explore: tables {
   group_label: "DB Info Schema"
   label: "Table Metadata"
-  join: table_constraints {
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${tables.table_pk} = ${table_constraints.table_key} ;;
-  }
   join: schemata {
     type: left_outer
     relationship: many_to_one

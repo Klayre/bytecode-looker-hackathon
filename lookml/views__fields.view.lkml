@@ -889,7 +889,7 @@ view: views__fields {
     group_label: "SQL"
     label: "SQL"
     type: string
-    sql: ${TABLE}.sql ;;
+    sql: ${TABLE}."sql" ;;
   }
 
   dimension: sql_distinct_key {
@@ -943,14 +943,14 @@ view: views__fields {
 
   dimension: db_schema_name {
     group_label: "SQL"
-    label: "DB Table Name"
+    label: "DB Schema Name"
     type: string
     sql: SPLIT_PART(${sql_table_name}, '.', -2) ;;
   }
 
-  dimension: db__name {
+  dimension: db_name {
     group_label: "SQL"
-    label: "DB Table Name"
+    label: "DB Name"
     type: string
     sql: SPLIT_PART(${sql_table_name}, '.', -3) ;;
   }
@@ -959,8 +959,19 @@ view: views__fields {
     group_label: "SQL"
     label: "Table.Column Name"
     type: string
-    sql: REPLACE(COALESCE(${sql}, ${sql_start}, ${sql_end}, ${sql_latitude}, ${sql_longitude},
-      ${sql_distinct_key}), '${TABLE}', ${db_table_name}) ;;
+    sql: CASE WHEN CONTAINS(${sql_combined}, '\$\{TABLE\}') THEN
+            ${db_table_name} || '.' ||
+            REGEXP_SUBSTR(${sql_combined}, '\\$\{TABLE\}\.([A-Za-z0-9_]+)', 1, 1, 'e', 1)
+          ELSE ${sql_combined} END ;;
+  }
+
+  dimension: sql_combined {
+    group_label: "SQL"
+    label: "SQL Combined"
+    type: string
+    sql: COALESCE(${sql}, ${sql_start}, ${sql_end}, ${sql_latitude}, ${sql_longitude},
+            ${sql_distinct_key}) ;;
+    hidden: yes
   }
 
 
@@ -1070,6 +1081,7 @@ view: views__fields {
   }
 
   dimension: view_label {
+    group_label: "View"
     label: "View Label"
     type: string
     sql: ${TABLE}.VIEW_LABEL ;;
