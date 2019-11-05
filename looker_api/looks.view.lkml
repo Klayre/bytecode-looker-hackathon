@@ -117,7 +117,7 @@ view: looks {
   dimension: explore_link {
     type: string
     sql: ${id} ;;
-    html: <a style="color:#49719a;font-size:12px" href="https://bytecode.looker.com/looks/{{ value }}/explore">Explore From Here</a> ;;
+    html: <a style="color:#49719a;font-size:12px" href="/embed/looks/{{ value }}/explore">Explore From Here</a> ;;
   }
 
   dimension: favorite_count {
@@ -279,9 +279,9 @@ view: looks {
     type: string
     sql: ${title} ;;
     html: <div>
-      <div><a style="color: #1c2027;font-size: 14px;" href="/looks/{{ looks.id._value }}">{{value}}</a></div>
-    <div><a style="color: #7f7977;font-size: 12px;" href="/looks/{{ looks.id._value }}">{{ looks.description._value }}</a></div>
-    <div><a style="color: #7f7977;font-size: 12px;" href="/looks/{{ looks.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
+      <div><a style="color: #1c2027;font-size: 14px;" href="/embed/looks/{{ looks.id._value }}">{{value}}</a></div>
+    <div><a style="color: #7f7977;font-size: 12px;" href="/embed/looks/{{ looks.id._value }}">{{ looks.description._value }}</a></div>
+    <div><a style="color: #7f7977;font-size: 12px;" href="/embed/looks/{{ looks.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
     </div>;;
   }
 
