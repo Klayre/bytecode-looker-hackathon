@@ -149,7 +149,7 @@ view: spaces {
 
   dimension: name_button {
       sql: ${name} ;;
-      html: <a href="?Parent%20Space={{ spaces.id._value }}"><button style="width:200px;height:40px;font-size:14px;font-weight:400;box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 8px, rgba(0, 0, 0, 0.05) 0px 1px 1px;border:1px solid rgb(222, 225, 229);color: rgb(38, 45, 51);border-radius:4px;">{{rendered_value}}</button></a> ;;
+      html: <a href="?Parent%20Space={{ spaces.id._value }}"><button style="width:200px;height:40px;font-size:14px;font-weight:400;box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 8px, rgba(0, 0, 0, 0.05) 0px 1px 1px;border:1px solid rgb(222, 225, 229);color: rgb(38, 45, 51);border-radius:4px;text-align:left;padding-left:15px;">{{rendered_value}}</button></a> ;;
   }
 
   dimension: parent_id {

@@ -178,7 +178,7 @@ view: dashboards {
     sql: ${id} ;;
     html: <a href="/folders/{{ value }}">
       <img style="width:83px" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
-      </a>;;
+      </a><br /><br />;;
   }
 
   dimension: user_id {

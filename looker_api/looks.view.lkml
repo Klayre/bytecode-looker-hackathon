@@ -262,6 +262,25 @@ view: looks {
     sql: ${space}:name ;;
   }
 
+  dimension: list_title {
+    label: "List Title Block"
+    type: string
+    sql: ${title} ;;
+    html: <div>
+      <a style="color: #1c2027;font-size: 14px;" href="/looks/{{ looks.id._value }}">{{value}}</a><br/>
+    <a style="color: #7f7977;font-size: 12px;" href="/looks/{{ looks.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a>
+    </div>;;
+  }
+
+  dimension: thumbnail {
+    label: "Look Thumbnail"
+    type: string
+    sql: ${id} ;;
+    html: <a href="/folders/{{ value }}">
+      <img style="width:83px;height:55px;" src="https://bytecode.looker.com/api/internal/vector_thumbnail/look/{{value}}" />
+      </a><br /><br />;;
+  }
+
   dimension: title {
     label: "Look Title"
     type: string
