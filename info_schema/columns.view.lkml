@@ -1,7 +1,7 @@
 
 view: columns {
   view_label: "Columns"
-  sql_table_name: SNOWFLAKE_SAMPLE_DATA.INFORMATION_SCHEMA.COLUMNS ;;
+  sql_table_name: @{info_schema_db}.INFORMATION_SCHEMA.COLUMNS ;;
 
 
   dimension: column_pk {
@@ -208,10 +208,97 @@ view: columns {
     sql: ${TABLE}.IS_NULLABLE ;;
   }
 
+
   dimension: is_self_referencing {
     label: "Is Self Referencing"
     type: string
     sql: ${TABLE}.IS_SELF_REFERENCING ;;
+  }
+
+  dimension: column_lookml_pk {
+    group_label: "LookML"
+    label: "Column LookML PK"
+    description: "Primary key candidate for LookML based on is_identity, is_nullable, and column_name."
+    type: yesno
+    sql: CASE WHEN ${is_identity} = 'YES' AND ${is_nullable} = 'NO' THEN TRUE
+              WHEN ${column_name} = 'ID' AND ${is_nullable} = 'NO' THEN TRUE
+              WHEN STARTSWITH(${column_name}, ${table_name}) AND
+                ENDSWITH(${column_name}, 'ID') AND ${is_nullable} = 'NO' THEN TRUE
+              ELSE FALSE END ;;
+  }
+
+  dimension: column_lookml_type {
+    group_label: "LookML"
+    label: "Column LookML Type"
+    type: string
+    sql: CASE WHEN ${data_type} = 'BOOLEAN' THEN 'yesno'
+              WHEN ${data_type} = 'NUMBER' THEN 'number'
+              WHEN ${data_type} = 'TEXT' THEN 'string'
+              WHEN ${data_type} = 'DATE' THEN 'time'
+              WHEN LEFT(${data_type}, 4) = 'TIME' THEN 'time'
+              ELSE 'string' END ;;
+  }
+
+  dimension: column_lookml_is_dimension_group {
+    group_label: "LookML"
+    label: "Column LookML Is Dimension Group"
+    type: yesno
+    sql: LEFT(${data_type}, 4) IN ('DATE', 'TIME') ;;
+  }
+
+  dimension: column_lookml_label {
+    group_label: "LookML"
+    label: "Column LookML Label"
+    type: string
+    sql: initcap(replace(${column_name}, '_', ' '))  ;;
+  }
+
+  dimension: column_lookml_sql {
+    group_label: "LookML"
+    label: "Column LookML SQL"
+    type: string
+    sql: '\$\{TABLE\}\.' || ${column_name} ;;
+    hidden: yes
+  }
+
+  dimension: column_lookml_proposed {
+    group_label: "LookML"
+    label: "Column LookML Proposed"
+    type: string
+    html: {% if column_lookml_is_dimension_group._value == 'Yes'  %}
+              dimension_group: {{ column_name._value | downcase }} { <br>
+          {% else %}
+              dimension: {{ column_name._value | downcase }} { <br>
+          {% endif %}
+          &nbsp &nbsp label: "{{ column_lookml_label._value }}" <br>
+          &nbsp &nbsp type: {{ column_lookml_type._value }} <br>
+          {% if data_type._value == 'DATE' %}
+              &nbsp &nbsp datatype: date <br>
+          {% elsif data_type._value == 'DATETIME' %}
+              &nbsp &nbsp datatype: datetime <br>
+          {% elsif data_type._value contains 'TIMESTAMP' %}
+              &nbsp &nbsp datatype: timestamp <br>
+          {% endif %}
+          {% if column_lookml_is_dimension_group._value == 'Yes' %}
+              &nbsp &nbsp timeframes: [raw, time, date, week, month, quarter, year] <br>
+          {% endif %}
+          {% if column_lookml_pk._value == 'Yes' %}
+              &nbsp &nbsp primary_key: yes <br>
+          {% endif %}
+          &nbsp &nbsp sql: <p style="display:inline; color: dimgray; background-color: gainsboro; font-size:100%; text-align:left"> {{ column_lookml_sql._value }} </p> &nbsp ;\;<br>
+          } <br> ;;
+    sql:  {% if column_lookml_is_dimension_group._value == 'Yes'  %}
+              'dimension_group\: ' || lower(${column_name}) || ' \{ \n' ||
+          {% else %}
+              'dimension\: ' || lower(${column_name}) || ' \{ \n' ||
+          {% endif %}
+          '  label\: "' || ${column_lookml_label} || '" \n' ||
+          '  type\: ' || ${column_lookml_type} || ' \n' ||
+          {% if column_lookml_is_dimension_group._value == 'Yes'  %}
+              '  timeframes\: \[raw, time, date, week, month, quarter, year\] \n' ||
+          {% endif %}
+          '  sql\: \$\{TABLE\}\.' || ${column_name} || '\;\; \n' ||
+          '\} \n' ;;
   }
 
   dimension: maximum_cardinality {

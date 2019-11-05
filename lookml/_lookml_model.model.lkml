@@ -11,6 +11,75 @@ datagroup: lookml_default_datagroup {
 
 persist_with: lookml_default_datagroup
 
+explore: views__fields {
+  group_label: "LookML"
+  label: "View Fields"
+}
+
+# Extend Queries from Looker Model
+explore: queries {
+  group_label: "Looker API"
+  label: "Queries"
+  view_name: queries
+  extends: [queries]
+  hidden: yes
+}
+
+explore: columns {
+  view_name: columns
+  extends: [queries]
+  group_label: "LookML"
+  label: "DB Columns to LookML Fields"
+  view_label: " DB Columns"
+  join: tables {
+    view_label: " DB Tables"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${columns.table_key} = ${tables.table_pk} ;;
+  }
+  join: views__fields {
+    view_label: "LookML Fields"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${columns.table_column_name} = ${views__fields.table_column_name}
+          AND ${columns.table_schema} = ${views__fields.db_schema_name} ;;
+  }
+  join: views {
+    view_label: "LookML Views"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${views__fields.view_key} = ${views.view_key} ;;
+  }
+  join: view_files {
+    view_label: "LookML View Files"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${views.view_file_key} = ${view_files.view_file_pk} ;;
+  }
+  join: explores__fields {
+    view_label: "Looker Explore Fields"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${views__fields.view_field_name} = ${explores__fields.view_field_name} ;;
+  }
+  join: explores {
+    view_label: "Looker Explores"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${explores__fields.explore_id} = ${explores.id} ;;
+  }
+  join: lookml_models {
+    view_label: "Looker Models"
+    type: full_outer
+    relationship: many_to_one
+    sql_on: ${explores__fields.model_name} = ${lookml_models.name} ;;
+  }
+#   join: models__explores__joins__fields {
+#     view_label: "LookML Joins Fields"
+#     sql_on: ${views__fields.view_field_name} = ${} ;;
+#   }
+
+}
 
 explore: models_explores {
   view_name: model_files

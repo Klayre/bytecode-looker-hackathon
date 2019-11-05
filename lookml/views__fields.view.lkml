@@ -6,6 +6,9 @@ view: views__fields {
     select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
       'dimension_groups' as field_category,
       -- dg.value::variant as field,
       NULL::variant as actions,
@@ -77,6 +80,9 @@ view: views__fields {
       select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
       'dimension_groups' as field_category,
       -- dg.value::variant as field,
       NULL::variant as actions,
@@ -148,6 +154,9 @@ view: views__fields {
       select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
       'dimensions' as field_category,
       -- d.value::variant as field,
       d.value:actions::variant as actions,
@@ -217,6 +226,9 @@ view: views__fields {
       select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
       'measures' as field_category,
       -- m.value::variant as field,
       m.value:actions::variant as actions,
@@ -286,7 +298,11 @@ view: views__fields {
       select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
-      v.filters::variant as fields,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
+      'filters' as field_category,
+      -- v.filters::variant as fields,
       -- f.value::variant as field,
       NULL as actions,
       f.value:alias::variant as alias,
@@ -355,7 +371,11 @@ view: views__fields {
       select  v.sha as view_sha,
       v.path as view_path,
       v.name as view_name,
-      v.parameters::variant as fields,
+      v.git_owner as git_owner,
+      v.git_repository as git_repository,
+      v.sql_table_name as sql_table_name,
+      'parameters' as field_category,
+      -- v.parameters::variant as fields,
       -- p.value::variant as field,
       NULL as actions,
       p.value:alias::variant as alias,
@@ -438,7 +458,7 @@ view: views__fields {
     label: "View Key"
     type: string
     hidden: yes
-    sql: ${view_files.git_owner} || '-' || ${view_files.git_repository} || '-' || ${view_name} ;;
+    sql: ${git_owner} || '-' || ${git_repository} || '-' || ${view_name} ;;
   }
 
   dimension: view_sha {
@@ -460,6 +480,20 @@ view: views__fields {
     label: "View Name"
     type: string
     sql: ${TABLE}.VIEW_NAME ;;
+  }
+
+  dimension: git_owner {
+    group_label: "View"
+    label: "Git Owner"
+    type: string
+    sql: ${TABLE}.GIT_OWNER ;;
+  }
+
+  dimension: git_repository {
+    group_label: "View"
+    label: "Git Repository"
+    type: string
+    sql: ${TABLE}.GIT_REPOSITORY ;;
   }
 
   dimension: field_category {
@@ -855,7 +889,7 @@ view: views__fields {
     group_label: "SQL"
     label: "SQL"
     type: string
-    sql: ${TABLE}.sql ;;
+    sql: ${TABLE}."sql" ;;
   }
 
   dimension: sql_distinct_key {
@@ -892,6 +926,54 @@ view: views__fields {
     type: string
     sql: ${TABLE}.SQL_START ;;
   }
+
+  dimension: sql_table_name {
+    group_label: "SQL"
+    label: "SQL Table Name"
+    type: string
+    sql: ${TABLE}.SQL_TABLE_NAME ;;
+  }
+
+  dimension: db_table_name {
+    group_label: "SQL"
+    label: "DB Table Name"
+    type: string
+    sql: SPLIT_PART(${sql_table_name}, '.', -1) ;;
+  }
+
+  dimension: db_schema_name {
+    group_label: "SQL"
+    label: "DB Schema Name"
+    type: string
+    sql: SPLIT_PART(${sql_table_name}, '.', -2) ;;
+  }
+
+  dimension: db_name {
+    group_label: "SQL"
+    label: "DB Name"
+    type: string
+    sql: SPLIT_PART(${sql_table_name}, '.', -3) ;;
+  }
+
+  dimension: table_column_name {
+    group_label: "SQL"
+    label: "Table.Column Name"
+    type: string
+    sql: CASE WHEN CONTAINS(${sql_combined}, '\$\{TABLE\}') THEN
+            ${db_table_name} || '.' ||
+            REGEXP_SUBSTR(${sql_combined}, '\\$\{TABLE\}\.([A-Za-z0-9_]+)', 1, 1, 'e', 1)
+          ELSE ${sql_combined} END ;;
+  }
+
+  dimension: sql_combined {
+    group_label: "SQL"
+    label: "SQL Combined"
+    type: string
+    sql: COALESCE(${sql}, ${sql_start}, ${sql_end}, ${sql_latitude}, ${sql_longitude},
+            ${sql_distinct_key}) ;;
+    hidden: yes
+  }
+
 
   dimension: style {
     group_label: "Dimension Only"
@@ -999,6 +1081,7 @@ view: views__fields {
   }
 
   dimension: view_label {
+    group_label: "View"
     label: "View Label"
     type: string
     sql: ${TABLE}.VIEW_LABEL ;;
