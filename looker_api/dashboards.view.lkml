@@ -168,6 +168,7 @@ view: dashboards {
     sql: ${title} ;;
     html: <div>
       <div style="color: #1c2027;font-size: 14px;"><a href="/dashboards/{{ dashboards.id._value }}">{{value}}</a></div>
+      <div style="color:#7f7977"><a href="/dashboards/{{ dashboards.id._value }}">{{dashboards.description._value }}</a></div>
     <div style="color: #7f7977;font-size: 12px;"><a href="/dashboards/{{ dashboards.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
     </div>;;
   }
