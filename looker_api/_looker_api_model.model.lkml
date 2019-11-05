@@ -29,7 +29,16 @@ explore: content_usage {
   }
 }
 
-explore: spaces {}
+explore: spaces {
+  group_label: "Looker API"
+  join: parent_space {
+    from: spaces
+    view_label: "Parent Space"
+    relationship: many_to_one
+    type: left_outer
+    sql_on: ${spaces.parent_id} = ${parent_space.id} ;;
+  }
+}
 
 # Explore to show organization of Content
 explore: content_metadata {

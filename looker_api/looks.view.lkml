@@ -289,7 +289,7 @@ view: looks {
     label: "Look Thumbnail"
     type: string
     sql: ${id} ;;
-    html: <a href="/folders/{{ value }}">
+    html: <a href="/looks/{{ value }}">
       <img style="width:83px;height:55px;" src="https://bytecode.looker.com/api/internal/vector_thumbnail/look/{{value}}" />
       </a><br /><br />;;
   }
