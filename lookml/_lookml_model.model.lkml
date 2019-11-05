@@ -17,6 +17,11 @@ explore: models__explores__joins__views {
   label: "Models Explores Joins Views"
 }
 
+explore: explores__fields {
+  group_label: "LookML"
+  label: "Explores Fields"
+}
+
 
 explore: columns {
   view_name: columns

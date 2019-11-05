@@ -700,7 +700,13 @@ from looker.explores ex
   dimension: view_field_name {
     label: "View.Field Name"
     type: string
-    sql: ${view_name} || '.' || ${name} ;;
+    sql: ${name} ;;
+  }
+
+  dimension: explore_field_name {
+    label: "Explore: View.Field Name"
+    type: string
+    sql: ${explore_name} || ': ' || ${name} ;;
   }
 
   dimension: view_name {
