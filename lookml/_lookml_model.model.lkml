@@ -20,7 +20,6 @@ explore: models__explores__joins__views {
 
 explore: columns {
   view_name: columns
-  # extends: [queries]
   group_label: "LookML"
   label: "DB Columns Fields"
   view_label: " DB Columns"
@@ -51,33 +50,72 @@ explore: columns {
   }
 
   join: queries__fields_all {
-    view_label: "Looker Queries Fields"
+    view_label: "Looker API Queries Fields"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${models__explores__joins__views.view_alias_name} || '.'
-            and ${views__fields.name} = ${queries__fields_all.field_name} ;;
+    sql_on: ${models__explores__joins__views.view_alias_name} || '.' ||
+                  ${views__fields.name} = ${queries__fields_all.field_name} ;;
     fields: [field_name]
   }
   join: queries {
-    view_label: "Looker Queries"
+    view_label: "Looker API Queries"
     type: left_outer
     relationship: many_to_one
     sql_on: ${queries__fields_all.query_id} = ${queries.id} ;;
     fields: [model, view]
   }
+  join: dashboard_elements {
+    view_label: "Looker API Dashboard Elements"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${dashboard_elements.query_id} ;;
+  }
+  join: dashboards {
+    view_label: "Looker API Dashboards"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${dashboard_elements.dashboard_id} = ${dashboards.id} ;;
+  }
+  join: looks {
+    view_label: "Looker API Looks"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${looks.query_id} ;;
+  }
+  join: content_metadata {
+    view_label: "Looker API Content Metadata"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${dashboards.content_metadata_id} = ${content_metadata.id}
+            OR ${looks.content_metadata_id} = ${content_metadata.id} ;;
+  }
+  join: content_views {
+    view_label: "Looker API Content Views"
+    from: content_views
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
+  }
+  join: viewing_users {
+    view_label: "Viewing Users"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_views.user_id} = ${viewing_users.id} ;;
+  }
 
-#   join: explores__fields {
-#     view_label: "Looker Explore Fields"
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${views__fields.view_field_name} = ${explores__fields.view_field_name} ;;
-#   }
-#   join: explores {
-#     view_label: "Looker Explores"
-#     type: left_outer
-#     relationship: many_to_one
-#     sql_on: ${explores__fields.explore_id} = ${explores.id} ;;
-#   }
+  join: explores__fields {
+    view_label: "Looker API Explore Fields"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${views__fields.view_field_name} = ${explores__fields.view_field_name} ;;
+  }
+  join: explores {
+    view_label: "Looker API Explores"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${explores__fields.explore_id} = ${explores.id} ;;
+  }
 
 }
 
