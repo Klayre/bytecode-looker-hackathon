@@ -168,6 +168,7 @@ view: content_views {
     label: "Total Views"
     type: sum
     sql: ${view_count} ;;
+    value_format_name: decimal_0
   }
 
 
