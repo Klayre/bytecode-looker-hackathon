@@ -11,11 +11,6 @@ datagroup: lookml_default_datagroup {
 
 persist_with: lookml_default_datagroup
 
-explore: views__fields {
-  group_label: "LookML"
-  label: "View Fields"
-}
-
 
 explore: models__explores__joins__views {
   group_label: "LookML"
@@ -630,4 +625,20 @@ explore: views_explore {
              , lateral flatten(input => "set".value:fields) sfld ;;
         required_joins: [views]
       }
+}
+
+explore: views_fields {
+  view_name: views__fields
+  group_label: "LookML"
+  label: "View Fields"
+  view_label: "LookML Fields"
+
+  join: columns {
+    view_label: "DB Columns"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${columns.table_column_name} = ${views__fields.table_column_name}
+      AND ${columns.table_schema} = ${views__fields.db_schema_name} ;;
+  }
+
 }
