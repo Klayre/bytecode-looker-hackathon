@@ -640,4 +640,11 @@ explore: views_fields {
       AND ${columns.table_schema} = ${views__fields.db_schema_name} ;;
   }
 
+  join: x_view_fields_db_columns {
+    sql: ;;
+    # Use `sql` instead of `sql_on` and put some whitespace in it
+    relationship: one_to_one
+    view_label: "LookML Fields" #For cleaner explore UI
+}
+
 }
