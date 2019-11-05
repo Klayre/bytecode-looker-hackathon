@@ -4,6 +4,7 @@ view: tables {
 
   dimension: table_pk {
     label: "Table PK"
+    primary_key: yes
     type: string
     sql: ${table_catalog} || '.' || ${table_schema} || '.' || ${table_name} ;;
     hidden: yes
