@@ -1055,7 +1055,7 @@ view: views__fields {
   dimension: type {
     label: "Field Type"
     type: string
-    sql: ${TABLE}.TYPE ;;
+    sql: ${TABLE}."type" ;;
   }
 
   dimension: value_format {
