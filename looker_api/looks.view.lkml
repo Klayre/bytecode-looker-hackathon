@@ -94,6 +94,12 @@ view: looks {
     sql: ${TABLE}.DELETED ;;
   }
 
+  dimension: description {
+    label: "Look Description"
+    type: string
+    sql: ${TABLE}.DESCRIPTION ;;
+  }
+
   dimension: embed_url {
     group_label: "URLs"
     label: "Embed URL"
@@ -106,6 +112,12 @@ view: looks {
     label: "Excel File URL"
     type: string
     sql: ${TABLE}.EXCEL_FILE_URL ;;
+  }
+
+  dimension: explore_link {
+    type: string
+    sql: ${id} ;;
+    html: <a style="color:#49719a;font-size:12px" href="https://bytecode.looker.com/looks/{{ value }}/explore">Explore From Here</a> ;;
   }
 
   dimension: favorite_count {
@@ -198,7 +210,7 @@ view: looks {
   dimension: model_label {
     label: "Model Label"
     type: string
-    sql: ${model}:label ;;
+    sql: TRIM(REPLACE(${model}:label,'"')) ;;
   }
 
   dimension: public {
@@ -303,6 +315,23 @@ view: looks {
       year
     ]
     sql: ${TABLE}.UPDATED_AT ;;
+  }
+
+  dimension_group: last_updated {
+    type: duration
+    sql_start: ${updated_time} ;;
+    sql_end: CURRENT_TIMESTAMP() ;;
+  }
+
+  dimension: last_updated_ago {
+    type: string
+    sql: CASE
+      WHEN ${months_last_updated} >= 1 THEN CONCAT(${months_last_updated}, ' months ago')
+      WHEN ${days_last_updated} >= 1 THEN CONCAT(${days_last_updated}, ' days ago')
+      ELSE CONCAT(${hours_last_updated}, ' hours ago')
+      END
+    ;;
+    html: <span style="color:#1C2027;font-size:12px;font-family:'Open Sans','Noto Sans JP','Noto Sans','Noto Sans CJK KR',Helvetica,Arial,sans-serif;">{{value}}</span> ;;
   }
 
   dimension: user {

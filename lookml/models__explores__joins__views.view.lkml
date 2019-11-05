@@ -294,6 +294,13 @@ view: models__explores__joins__views {
     sql:array_to_string(parse_json(${required_joins}), ', ') ;;
   }
 
+  dimension: sql {
+    group_label: "SQL"
+    label: "SQL"
+    type: string
+    sql: ${join_json}:"sql"::varchar ;;
+  }
+
   dimension: sql_foreign_key {
     group_label: "SQL"
     label: "SQL Foreign Key"
@@ -320,6 +327,43 @@ view: models__explores__joins__views {
     label: "SQL Where"
     type: string
     sql: ${join_json}:sql_where::varchar ;;
+  }
+
+  # Currently only works for the first join relation
+  dimension: sql_combined {
+    group_label: "SQL"
+    label: "SQL Combined"
+    type: string
+    sql: COALESCE(${sql_on}, ${sql_where}, ${sql}) ;;
+    hidden: yes
+  }
+
+  dimension: sql_on_source_view {
+    group_label: "SQL"
+    label: "SQL On Source View"
+    type: string
+    sql: REGEXP_SUBSTR(${sql_combined}, '\\$\{([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\}', 1, 1, 'e', 1) ;;
+  }
+
+  dimension: sql_on_source_field {
+    group_label: "SQL"
+    label: "SQL On Source Field"
+    type: string
+    sql: REGEXP_SUBSTR(${sql_combined}, '\\$\{([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\}', 1, 1, 'e', 2) ;;
+  }
+
+  dimension: sql_on_target_view {
+    group_label: "SQL"
+    label: "SQL On Target View"
+    type: string
+    sql: REGEXP_SUBSTR(${sql_combined}, '\\$\{([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\}', 1, 2, 'e', 1) ;;
+  }
+
+  dimension: sql_on_target_field {
+    group_label: "SQL"
+    label: "SQL On Target Field"
+    type: string
+    sql: REGEXP_SUBSTR(${sql_combined}, '\\$\{([A-Za-z0-9_]+)\.([A-Za-z0-9_]+)\}', 1, 2, 'e', 2) ;;
   }
 
   dimension: type {

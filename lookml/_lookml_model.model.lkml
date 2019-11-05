@@ -18,7 +18,6 @@ explore: models__explores__joins__views {
 }
 
 
-
 explore: columns {
   view_name: columns
   # extends: [queries]

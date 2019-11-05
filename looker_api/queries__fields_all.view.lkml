@@ -1,15 +1,19 @@
 view: queries__fields_all {
   view_label: "Queries"
   derived_table: {
-    sql: select q.id as query_id,
+    sql:
+        select q.id as query_id,
         qf.value::varchar as field_name
         from looker.queries q
         , lateral flatten(input => q.fields) qf
+
         UNION
+
         select  q.id as query_id,
-        qfil.key as field_name
+        qfil.key::varchar as field_name
         from looker.queries q
-        , lateral flatten(input => q.filters) qfil ;;
+        , lateral flatten(input => q.filters) qfil
+         ;;
   }
   dimension: fields_pk {
     group_label: "Fields All"
