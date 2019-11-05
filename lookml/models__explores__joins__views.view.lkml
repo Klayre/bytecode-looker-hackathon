@@ -24,11 +24,11 @@ view: models__explores__joins__views {
         models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
         models.PATH::varchar  AS MODEL_PATH,
         SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1)::varchar as MODEL_NAME,
-        COALESCE(ex.value:name, '#N/A')::varchar AS EXPLORE_NAME,
-        COALESCE((j.value:"from"::varchar), (j.value:name::varchar), '#N/A')::varchar  AS VIEW_NAME,
-        COALESCE(j.value:"from", '#N/A')::varchar AS VIEW_FROM,
-        COALESCE(j.value:view_label, '#N/A')::varchar AS VIEW_LABEL,
-        COALESCE(j.value:name, '#N/A')::varchar AS JOIN_NAME,
+        COALESCE(ex.value:name, '')::varchar AS EXPLORE_NAME,
+        COALESCE((j.value:"from"::varchar), (j.value:name::varchar), '')::varchar  AS VIEW_NAME,
+        COALESCE(j.value:"from", '')::varchar AS VIEW_FROM,
+        COALESCE(j.value:view_label, '')::varchar AS VIEW_LABEL,
+        COALESCE(j.value:name, '')::varchar AS JOIN_NAME,
         j.value::variant AS JOIN_JSON,
         'JOINED VIEW' AS JOIN_VIEW_TYPE,
         j.index::int as JOIN_INDEX,
@@ -48,11 +48,11 @@ view: models__explores__joins__views {
         models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
         models.PATH::varchar AS MODEL_PATH,
         SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1)::varchar as MODEL_NAME,
-        COALESCE(ex.value:name, '#N/A')::varchar  AS EXPLORE_NAME,
-        COALESCE ((ex.value:"from"::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar), '#N/A')::varchar  AS VIEW_NAME,
-        COALESCE(ex.value:"from", '#N/A')::varchar AS VIEW_FROM,
-        COALESCE(ex.value:view_label, '#N/A')::varchar  AS VIEW_LABEL,
-        '#N/A' AS JOIN_NAME,
+        COALESCE(ex.value:name, '')::varchar  AS EXPLORE_NAME,
+        COALESCE ((ex.value:"from"::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar), '')::varchar  AS VIEW_NAME,
+        COALESCE(ex.value:"from", '')::varchar AS VIEW_FROM,
+        COALESCE(ex.value:view_label, '')::varchar  AS VIEW_LABEL,
+        ''::varchar AS JOIN_NAME,
         ''::variant AS JOIN_JSON,
         'BASE VIEW' AS JOIN_VIEW_TYPE,
         -1::int AS JOIN_INDEX,
@@ -69,8 +69,8 @@ view: models__explores__joins__views {
         models.GIT_OWNER::varchar AS GIT_OWNER,
         models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
         models.PATH::varchar AS MODEL_PATH,
-        COALESCE(ex.value:name, '#N/A')::varchar AS EXPLORE_NAME,
-        COALESCE(jrj.value, '#N/A')::varchar AS VIEW_NAME,
+        COALESCE(ex.value:name, '')::varchar AS EXPLORE_NAME,
+        COALESCE(jrj.value, '')::varchar AS VIEW_NAME,
         'yes' AS REQUIRED
       FROM LOOKML.MODEL_FILES AS model_files
       LEFT JOIN LOOKML.MODELS AS models
@@ -375,8 +375,8 @@ view: models__explores__joins__views {
   dimension: view_alias_name {
     label: "View Alias Name"
     type: string
-    sql: CASE WHEN ${view_from} IS NOT NULL THEN COALESCE(${join_name}, ${explore_name}, ${view_name})
-          ELSE ${view_name} END;;
+    sql: CASE WHEN ${view_from} IS NOT NULL THEN COALESCE(${join_name}, ${explore_name}, ${view_name})::varchar
+          ELSE ${view_name}::varchar END;;
   }
 
   dimension: view_from {
