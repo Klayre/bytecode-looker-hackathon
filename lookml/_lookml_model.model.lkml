@@ -82,6 +82,27 @@ explore: columns {
     relationship: one_to_many
     sql_on: ${queries.id} = ${looks.query_id} ;;
   }
+  join: content_metadata {
+    view_label: "Looker API Content Metadata"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${dashboards.content_metadata_id} = ${content_metadata.id}
+            OR ${looks.content_metadata_id} = ${content_metadata.id} ;;
+  }
+  join: content_views {
+    view_label: "Looker API Content Views"
+    from: content_views
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${content_metadata.id} = ${content_views.content_metadata_id} ;;
+  }
+  join: viewing_users {
+    view_label: "Viewing Users"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${content_views.user_id} = ${viewing_users.id} ;;
+  }
 
   join: explores__fields {
     view_label: "Looker API Explore Fields"
