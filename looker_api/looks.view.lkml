@@ -94,6 +94,12 @@ view: looks {
     sql: ${TABLE}.DELETED ;;
   }
 
+  dimension: description {
+    label: "Look Description"
+    type: string
+    sql: ${TABLE}.DESCRIPTION ;;
+  }
+
   dimension: embed_url {
     group_label: "URLs"
     label: "Embed URL"
