@@ -177,8 +177,8 @@ view: dashboards {
     label: "Dashboard Thumbnail"
     type: string
     sql: ${id} ;;
-    html: <a href="/folders/{{ value }}">
-      <img style="width:83px" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
+    html: <a href="/dashboards/{{ value }}">
+      <img style="width:83px;height:55px;" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
       </a><br /><br />;;
   }
 
