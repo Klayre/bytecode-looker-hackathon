@@ -147,6 +147,12 @@ view: spaces {
     }
   }
 
+  dimension: name_breadcrumb {
+    type: string
+    sql: ${name} ;;
+    html: {% if parent_space.name._value | strip != "" %}<a style="color:#49719a;font-size:21px;" href="/dashboards/71?Parent%20Space={{ spaces.parent_id._rendered_value }}">{{ parent_space.name._value }}</a> <span style="font-size:21px;color:#d3d3d3;">></span> {% endif %}<span style="font-size:21px;color:#1c2027">{{ value }}</span> ;;
+  }
+
   dimension: name_button {
       sql: ${name} ;;
       html: <a style="display:block;width:200px;height:40px;font-size:14px;font-weight:400;box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 8px, rgba(0, 0, 0, 0.05) 0px 1px 1px;border:1px solid rgb(222, 225, 229);color: rgb(38, 45, 51);background-color:#ffffff;border-radius:4px;text-align:left;padding-left:15px;" href="/dashboards/71?Parent%20Space={{ spaces.id._value }}">{{rendered_value}}</a> ;;
@@ -156,7 +162,7 @@ view: spaces {
     group_label: "Keys/IDs"
     label: "Parent Space ID"
     type: string
-    sql: COALESCE(${TABLE}."PARENT_ID",0) ;;
+    sql: COALESCE(${TABLE}."PARENT_ID",'0') ;;
   }
 
   dimension: short_url {
