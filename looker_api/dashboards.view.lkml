@@ -167,8 +167,8 @@ view: dashboards {
     type: string
     sql: ${title} ;;
     html: <div>
-      <div style="color: #1c2027;font-size: 14px;">{{value}}</div>
-    <div style="color: #7f7977;font-size: 12px;">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</div>
+      <div style="color: #1c2027;font-size: 14px;"><a href="/dashboards/{{ dashboards.id._value }}">{{value}}</a></div>
+    <div style="color: #7f7977;font-size: 12px;"><a href="/dashboards/{{ dashboards.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
     </div>;;
   }
 
@@ -176,7 +176,9 @@ view: dashboards {
     label: "Dashboard Thumbnail"
     type: string
     sql: ${id} ;;
-    html: <img style="width:83px" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" /> ;;
+    html: <a href="/folders/{{ value }}">
+      <img style="width:83px" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
+      </a>;;
   }
 
   dimension: user_id {
