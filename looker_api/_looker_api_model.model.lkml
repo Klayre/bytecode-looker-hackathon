@@ -197,6 +197,11 @@ explore: explores {
   }
 }
 
+explore: explores__fields {
+  group_label: "Looker API"
+  label: "Explore Fields"
+}
+
 explore: folders {
   group_label: "Looker API"
   label: "Folders"
@@ -635,6 +640,9 @@ explore: roles {
 
 
 explore: role_groups {
+  group_label: "Looker API"
+  label: "Role Groups"
+  hidden: yes
   view_name: roles
   extends: [roles]
   join: role_groups {

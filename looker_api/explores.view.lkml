@@ -100,7 +100,7 @@ view: explores {
   }
 
   dimension: base_view_name {
-    label: "View Name"
+    label: "Base View Name"
     type: string
     sql: COALESCE(${view_name}, ${name}) ;;
   }

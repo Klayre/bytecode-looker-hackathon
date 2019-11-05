@@ -16,20 +16,19 @@ explore: views__fields {
   label: "View Fields"
 }
 
-# Extend Queries from Looker Model
-explore: queries {
-  group_label: "Looker API"
-  label: "Queries"
-  view_name: queries
-  extends: [queries]
-  hidden: yes
+
+explore: models__explores__joins__views {
+  group_label: "LookML"
+  label: "Models Explores Joins Views"
 }
+
+
 
 explore: columns {
   view_name: columns
-  extends: [queries]
+  # extends: [queries]
   group_label: "LookML"
-  label: "DB Columns to LookML Fields"
+  label: "DB Columns Fields"
   view_label: " DB Columns"
   join: tables {
     view_label: " DB Tables"
@@ -50,33 +49,40 @@ explore: columns {
     relationship: many_to_one
     sql_on: ${views__fields.view_key} = ${views.view_key} ;;
   }
-  join: view_files {
-    view_label: "LookML View Files"
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${views.view_file_key} = ${view_files.view_file_pk} ;;
-  }
-  join: explores__fields {
-    view_label: "Looker Explore Fields"
+  join: models__explores__joins__views {
+    view_label: "LookML Joins"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${views__fields.view_field_name} = ${explores__fields.view_field_name} ;;
+    sql_on: ${views__fields.view_key} = ${models__explores__joins__views.view_key} ;;
   }
-  join: explores {
-    view_label: "Looker Explores"
+
+  join: queries__fields_all {
+    view_label: "Looker Queries Fields"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${models__explores__joins__views.view_alias_name} || '.'
+            and ${views__fields.name} = ${queries__fields_all.field_name} ;;
+    fields: [field_name]
+  }
+  join: queries {
+    view_label: "Looker Queries"
     type: left_outer
     relationship: many_to_one
-    sql_on: ${explores__fields.explore_id} = ${explores.id} ;;
+    sql_on: ${queries__fields_all.query_id} = ${queries.id} ;;
+    fields: [model, view]
   }
-  join: lookml_models {
-    view_label: "Looker Models"
-    type: full_outer
-    relationship: many_to_one
-    sql_on: ${explores__fields.model_name} = ${lookml_models.name} ;;
-  }
-#   join: models__explores__joins__fields {
-#     view_label: "LookML Joins Fields"
-#     sql_on: ${views__fields.view_field_name} = ${} ;;
+
+#   join: explores__fields {
+#     view_label: "Looker Explore Fields"
+#     type: left_outer
+#     relationship: one_to_many
+#     sql_on: ${views__fields.view_field_name} = ${explores__fields.view_field_name} ;;
+#   }
+#   join: explores {
+#     view_label: "Looker Explores"
+#     type: left_outer
+#     relationship: many_to_one
+#     sql_on: ${explores__fields.explore_id} = ${explores.id} ;;
 #   }
 
 }
