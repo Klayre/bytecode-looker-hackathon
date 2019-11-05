@@ -2,80 +2,83 @@ view: models__explores__joins__views {
   view_label: "Joins"
   derived_table: {
     sql: SELECT
-      A.GIT_OWNER,
-      A.GIT_REPOSITORY,
-      A.MODEL_PATH,
-      A.MODEL_NAME,
-      A.MODEL_KEY,
-      A.EXPLORE_NAME,
-      A.EXPLORE_KEY,
-      A.VIEW_NAME,
-      A.VIEW_FROM,
-      A.VIEW_LABEL,
-      A.JOIN_NAME,
-      A.JOIN_JSON,
-      A.JOIN_INDEX,
-      A.JOIN_VIEW_TYPE,
-      COALESCE(B.REQUIRED, FALSE) AS JOIN_REQUIRED
+      A.GIT_OWNER::varchar AS GIT_OWNER,
+      A.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
+      A.MODEL_PATH::varchar AS MODEL_PATH,
+      A.MODEL_NAME::varchar AS MODEL_NAME,
+      A.MODEL_KEY::varchar AS MODEL_KEY,
+      A.EXPLORE_NAME::varchar AS EXPLORE_NAME,
+      A.EXPLORE_KEY::varchar AS EXPLORE_KEY,
+      A.VIEW_NAME::varchar AS VIEW_NAME,
+      A.VIEW_FROM::varchar AS VIEW_FROM,
+      A.VIEW_LABEL::varchar AS VIEW_LABEL,
+      A.JOIN_NAME::varchar AS JOIN_NAME,
+      A.JOIN_JSON::variant AS JOIN_JSON,
+      A.JOIN_INDEX::int AS JOIN_INDEX,
+      A.JOIN_VIEW_TYPE::varchar AS JOIN_VIEW_TYPE,
+      COALESCE(B.REQUIRED, 'no')::varchar AS JOIN_REQUIRED
       FROM
       (
-      -- BASE VIEWS
       SELECT
-        models.GIT_OWNER,
-        models.GIT_REPOSITORY,
-        models.PATH AS MODEL_PATH,
-        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
-        ex.value:name::varchar  AS EXPLORE_NAME,
-        COALESCE ((ex.value:"from"::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar))  AS VIEW_NAME,
-        ex.value:"from"::varchar AS VIEW_FROM,
-        ex.value:view_label::varchar  AS VIEW_LABEL,
-        NULL AS JOIN_NAME,
-        NULL AS JOIN_JSON,
-        'BASE VIEW' AS JOIN_VIEW_TYPE,
-        -1 AS JOIN_INDEX,
-        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH) AS MODEL_KEY,
-        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar) AS EXPLORE_KEY
-      FROM LOOKML.MODEL_FILES  AS model_files
-      LEFT JOIN LOOKML.MODELS  AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
-      , lateral flatten(input => models.EXPLORES) ex
-      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13
-      UNION
-      -- JOINED VIEWS
-      SELECT
-        models.GIT_OWNER,
-        models.GIT_REPOSITORY,
-        models.PATH  AS MODEL_PATH,
-        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1) as MODEL_NAME,
-        ex.value:name::varchar  AS EXPLORE_NAME,
-        COALESCE((j.value:"from"::varchar), (j.value:name::varchar))  AS VIEW_NAME,
-        j.value:"from"::varchar AS VIEW_FROM,
-        j.value:view_label::varchar AS VIEW_LABEL,
-        j.value:name::varchar AS JOIN_NAME,
+        models.GIT_OWNER::varchar AS GIT_OWNER,
+        models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
+        models.PATH::varchar  AS MODEL_PATH,
+        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1)::varchar as MODEL_NAME,
+        COALESCE(ex.value:name, '#N/A')::varchar AS EXPLORE_NAME,
+        COALESCE((j.value:"from"::varchar), (j.value:name::varchar), '#N/A')::varchar  AS VIEW_NAME,
+        COALESCE(j.value:"from", '#N/A')::varchar AS VIEW_FROM,
+        COALESCE(j.value:view_label, '#N/A')::varchar AS VIEW_LABEL,
+        COALESCE(j.value:name, '#N/A')::varchar AS JOIN_NAME,
         j.value::variant AS JOIN_JSON,
         'JOINED VIEW' AS JOIN_VIEW_TYPE,
         j.index::int as JOIN_INDEX,
-        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH) AS MODEL_KEY,
-        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar) AS EXPLORE_KEY
+        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)::varchar AS MODEL_KEY,
+        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar)::varchar AS EXPLORE_KEY
       FROM LOOKML.MODEL_FILES  AS model_files
       LEFT JOIN LOOKML.MODELS  AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
       , lateral flatten(input => models.EXPLORES) ex
       , lateral flatten(input => ex.value:joins) j
-      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13) A
+      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13, 14
+
+      UNION
+
+      -- BASE VIEWS
+      SELECT
+        models.GIT_OWNER::varchar AS GIT_OWNER,
+        models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
+        models.PATH::varchar AS MODEL_PATH,
+        SPLIT_PART(SPLIT_PART(models.path, '.', -3), '/', -1)::varchar as MODEL_NAME,
+        COALESCE(ex.value:name, '#N/A')::varchar  AS EXPLORE_NAME,
+        COALESCE ((ex.value:"from"::varchar), (ex.value:view_name::varchar), (ex.value:name::varchar), '#N/A')::varchar  AS VIEW_NAME,
+        COALESCE(ex.value:"from", '#N/A')::varchar AS VIEW_FROM,
+        COALESCE(ex.value:view_label, '#N/A')::varchar  AS VIEW_LABEL,
+        '#N/A' AS JOIN_NAME,
+        ''::variant AS JOIN_JSON,
+        'BASE VIEW' AS JOIN_VIEW_TYPE,
+        -1::int AS JOIN_INDEX,
+        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)::varchar AS MODEL_KEY,
+        (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH  || '-' || ex.value:name::varchar)::varchar AS EXPLORE_KEY
+      FROM LOOKML.MODEL_FILES AS model_files
+      LEFT JOIN LOOKML.MODELS AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
+      , lateral flatten(input => models.EXPLORES) ex
+      GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13, 14
+      ) A
       LEFT JOIN
       (
       SELECT
-        models.GIT_OWNER,
-        models.GIT_REPOSITORY,
-        models.PATH  AS MODEL_PATH,
-        ex.value:name::varchar  AS EXPLORE_NAME,
-        jrj.value::varchar  AS VIEW_NAME,
-        TRUE AS REQUIRED
-      FROM LOOKML.MODEL_FILES  AS model_files
-      LEFT JOIN LOOKML.MODELS  AS models ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
+        models.GIT_OWNER::varchar AS GIT_OWNER,
+        models.GIT_REPOSITORY::varchar AS GIT_REPOSITORY,
+        models.PATH::varchar AS MODEL_PATH,
+        COALESCE(ex.value:name, '#N/A')::varchar AS EXPLORE_NAME,
+        COALESCE(jrj.value, '#N/A')::varchar AS VIEW_NAME,
+        'yes' AS REQUIRED
+      FROM LOOKML.MODEL_FILES AS model_files
+      LEFT JOIN LOOKML.MODELS AS models
+      ON (model_files.GIT_OWNER || '-' || model_files.GIT_REPOSITORY || '-' || model_files.PATH) = (models.GIT_OWNER || '-' || models.GIT_REPOSITORY || '-' || models.PATH)
       , lateral flatten(input => models.EXPLORES) ex
       , lateral flatten(input => ex.value:joins) j
       , lateral flatten(input => j.value:required_joins) jrj
-      GROUP BY 1,2,3,4,5
+      GROUP BY 1,2,3,4,5,6
       ) B
       ON A.GIT_OWNER = B.GIT_OWNER
       AND A.GIT_REPOSITORY = B.GIT_REPOSITORY
@@ -188,6 +191,12 @@ view: models__explores__joins__views {
     label: "Join Required"
     type: string
     sql: ${TABLE}.JOIN_REQUIRED ;;
+  }
+
+  dimension: is_join_required {
+    label: "Is Join Required"
+    type: string
+    sql: ${TABLE}.JOIN_REQUIRED = 'yes' ;;
   }
 
   dimension: join_view_type {
