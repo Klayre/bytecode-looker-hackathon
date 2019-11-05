@@ -149,14 +149,14 @@ view: spaces {
 
   dimension: name_button {
       sql: ${name} ;;
-      html: <a href="https://bytecode.looker.com/dashboards/71?Parent%20Space={{ spaces.id._value }}"><button style="width:200px;height:40px;font-size:16px;font-weight:bold;">{{rendered_value}}</button></a> ;;
+      html: <a href="?Parent%20Space={{ spaces.id._value }}"><button style="width:200px;height:40px;font-size:14px;font-weight:400;box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 8px, rgba(0, 0, 0, 0.05) 0px 1px 1px;border:1px solid rgb(222, 225, 229);color: rgb(38, 45, 51);border-radius:4px;">{{rendered_value}}</button></a> ;;
   }
 
   dimension: parent_id {
     group_label: "Keys/IDs"
     label: "Parent Space ID"
     type: string
-    sql: ${TABLE}."PARENT_ID" ;;
+    sql: COALESCE(${TABLE}."PARENT_ID",0) ;;
   }
 
   dimension: short_url {
