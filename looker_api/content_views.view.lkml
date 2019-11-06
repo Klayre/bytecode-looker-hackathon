@@ -146,6 +146,13 @@ view: content_views {
     hidden: yes
   }
 
+  measure: count_users {
+    label: "Number of Unique Viewers"
+    type: count_distinct
+    sql: ${user_id} ;;
+    drill_fields: [detail*]
+  }
+
   measure: max_last_view {
     label: "Last Viewed"
     type: date_time
