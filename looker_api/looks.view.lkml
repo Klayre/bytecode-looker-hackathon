@@ -281,7 +281,13 @@ view: looks {
     html: <div>
       <div><a style="color: #1c2027;font-size: 14px;" href="/embed/looks/{{ looks.id._value }}">{{value}}</a></div>
     <div><a style="color: #7f7977;font-size: 12px;" href="/embed/looks/{{ looks.id._value }}">{{ looks.description._value }}</a></div>
-    <div><a style="color: #7f7977;font-size: 12px;" href="/embed/looks/{{ looks.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
+    <div><a style="color: #7f7977;font-size: 12px;" href="/embed/looks/{{ looks.id._value }}">
+    {{ content_views.total_views._rendered_value }} Views
+    {% if content_views.total_favorites._value > 0 %}
+      , {{ content_views.total_favorites._value }} Favorite
+      {% endif %}
+    , Created by {{ create_user.display_name._value }}
+    </a></div>
     </div>;;
   }
 

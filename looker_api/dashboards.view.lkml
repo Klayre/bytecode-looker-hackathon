@@ -169,7 +169,15 @@ view: dashboards {
     html: <div>
       <div style="color: #1c2027;font-size: 14px;"><a href="/embed/dashboards/{{ dashboards.id._value }}">{{value}}</a></div>
       <div style="color:#7f7977"><a href="/embed/dashboards/{{ dashboards.id._value }}">{{dashboards.description._value }}</a></div>
-    <div style="color: #7f7977;font-size: 12px;"><a href="/embed/dashboards/{{ dashboards.id._value }}">{{ content_views.total_views._rendered_value }} Views, Created by {{ create_user.display_name._value }}</a></div>
+    <div style="color: #7f7977;font-size: 12px;">
+      <a href="/embed/dashboards/{{ dashboards.id._value }}">
+      {{ content_views.total_views._rendered_value }} Views
+      {% if content_views.total_favorites._value > 0 %}
+      , {{ content_views.total_favorites._value }} Favorite
+      {% endif %}
+      , Created by {{ create_user.display_name._value }}
+      </a>
+      </div>
     </div>;;
   }
 
