@@ -142,6 +142,18 @@ explore: dashboards {
     relationship: many_to_one
     sql_on: ${dashboards.user_id} = ${create_user.id} ;;
   }
+  join: query_history {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${queries.id} = ${query_history.query_id} ;;
+  }
+  join: query_user {
+    view_label: "Query User"
+    from: users
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${query_history.user_id} = ${query_user.id} ;;
+  }
 }
 
 
