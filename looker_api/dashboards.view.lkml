@@ -178,7 +178,7 @@ view: dashboards {
     type: string
     sql: ${id} ;;
     html: <a href="/embed/dashboards/{{ value }}">
-      <img style="width:83px;height:55px;" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
+      <img style="max-width:83px;min-height:55px;" src="https://bytecode.looker.com/api/internal/vector_thumbnail/dashboard/{{value}}" />
       </a><br /><br />;;
   }
 
