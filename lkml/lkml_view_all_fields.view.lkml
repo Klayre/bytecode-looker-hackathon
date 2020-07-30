@@ -41,7 +41,7 @@ view: lkml_view_all_fields {
         desc: no
         field: field_name
       }
-      timezone: "timezone_name"
+      timezone: "UTC"
     }
     sql: SQL query ;;
     persist_for: "N hours"
